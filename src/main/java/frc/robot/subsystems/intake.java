@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class intake extends SubsystemBase {
   /** Creates a new intake. */
-  public intake() {
-private TalonFX intakeMotor = new TalonFX(1)
+  private TalonFX intakeMotor = new TalonFX(1);
 
+  public intake() {
   }
 
   @Override

@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Turret extends SubsystemBase {
   /** Creates a new Turret. */
   private TalonFX turretMotor = new TalonFX(1);
+  private TalonFX shootingMotor = new TalonFX(2);
+  private TalonFX shootingMotor2 = new TalonFX(3);
   public Turret() {}
 
   @Override

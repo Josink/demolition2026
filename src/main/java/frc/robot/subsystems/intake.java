@@ -16,7 +16,7 @@ public class intake extends SubsystemBase {
   private final TalonFX TalonFX = new TalonFX(2);
 
   public void runIntake() {
-    TalonFX.set(0.8);
+    TalonFX.set(0.9);
   }
 
   public void stopIntake() {

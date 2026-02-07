@@ -39,6 +39,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController DriverJoystick = new CommandXboxController(0); // My DriverJoystick
+    private final CommandXboxController OperatorJoystick = new CommandXboxController(1); // My OperatorJoystick
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 

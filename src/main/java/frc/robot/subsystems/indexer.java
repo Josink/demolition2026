@@ -4,10 +4,15 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class indexer extends SubsystemBase {
   /** Creates a new indexer. */
+  private TalonFX indexerMotor = new TalonFX(Constants.indexerConstants.indexerMotorID);
+  
   public indexer() {}
 
   @Override

@@ -59,6 +59,11 @@ public class Turret extends SubsystemBase {
     turretMotor.setControl(request);
   }
 
+  public void rotateToVolocity(double velocity){
+    final MotionMagicTorqueCurrentFOC request =  new MotionMagicTorqueCurrentFOC(velocity);
+    rShootingMotor.setControl(request);
+  }
+
   private void applyTurretMotorConfigs(){
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration(); 
 
@@ -93,11 +98,6 @@ public class Turret extends SubsystemBase {
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     turretMotor.getConfigurator().apply(motorOutputConfigs);
-  }
-
-  public void rotateToVolocity(double velocity){
-    final MotionMagicTorqueCurrentFOC request =  new MotionMagicTorqueCurrentFOC(velocity);
-    rShootingMotor.setControl(request);
   }
 
   private void applyShootingMotorConfigs(){

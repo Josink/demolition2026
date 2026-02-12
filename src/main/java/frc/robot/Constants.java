@@ -58,6 +58,19 @@ public class Constants {
 
     public static final class indexerConstants {
         public static final int indexerMotorID = 5;
+
+        //slot 0 PID values
+        public static final double kP = 0.1;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kv = 0.0;
+        public static final double ks = 0.0;
+        public static final double ka = 0.0;
+
+        //motion magic values
+        public static final int MotionMagicCruiseVelocity = 1500;
+        public static final int MotionMagicAcceleration = 600;
+        public static final int MotionMagicJerk = 1000;
     }
 
     

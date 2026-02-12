@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -45,23 +46,15 @@ public class Turret extends SubsystemBase {
     turretMotor.setPosition(0);
   }
 
-  public void spinTurret() {
-    turretMotor.set(.8);
-  }
-
-  public void shootTurret() {
-    lShootingMotor.set(.8);
-    rShootingMotor.set(0.8);
-  }
-
   public void rotateToPos(double position){
     final MotionMagicTorqueCurrentFOC request =  new MotionMagicTorqueCurrentFOC(position);
     turretMotor.setControl(request);
   }
 
-  public void rotateToVolocity(double velocity){
-    final MotionMagicTorqueCurrentFOC request =  new MotionMagicTorqueCurrentFOC(velocity);
+  public void rotateToVelocity(double velocity){
+    final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
     rShootingMotor.setControl(request);
+    lShootingMotor.setControl(request);
   }
 
   private void applyTurretMotorConfigs(){

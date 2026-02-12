@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -18,7 +19,7 @@ public class intake extends SubsystemBase {
   /** Creates a new intake. */
   private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID);
 
-public intake() {
+  public intake() {
     applyIntakeMotorConfigs();
   }
 
@@ -27,12 +28,9 @@ public intake() {
     // This method will be called once per scheduler run
   }
 
-    public void runIntake() {
-    intakeMotor.set(0.8);
-  }
-
-  public void stopIntake() {
-    intakeMotor.set(0); 
+  public void rotateToVelocity(double velocity){
+    final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
+    intakeMotor.setControl(request);
   }
 
   private void applyIntakeMotorConfigs(){

@@ -135,7 +135,8 @@ public class Turret extends SubsystemBase {
     lmotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     lmotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
-    lShootingMotor.getConfigurator().apply(rmotorOutputConfigs);
+    lShootingMotor.getConfigurator().apply(lmotorOutputConfigs);
+    rShootingMotor.getConfigurator().apply(rmotoroutputConfigs);
   }
 
 }

@@ -26,6 +26,7 @@ public class Turret extends SubsystemBase {
   
    public Turret() {
     applyTurretMotorConfigs();
+    applyShootingMotorConfigs();
   }
   
   @Override
@@ -137,12 +138,6 @@ public class Turret extends SubsystemBase {
     lShootingMotor.getConfigurator().apply(rmotorOutputConfigs);
   }
 
-
-
-  public void rotateToVol(double velocity){
-    final MotionMagicTorqueCurrentFOC request =  new MotionMagicTorqueCurrentFOC(velocity);
-    rShootingMotor.setControl(request);
-  }
 }
 
  

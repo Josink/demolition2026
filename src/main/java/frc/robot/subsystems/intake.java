@@ -6,23 +6,25 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class intake extends SubsystemBase {
-    public class IntakeSubsystem extends SubsystemBase {
-      private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID);
+  /** Creates a new intake. */
+  private TalonFX intakeMotor = new TalonFX(1);
+  private final TalonFX TalonFX = new TalonFX(2);
 
-    public void runIntake() {
-      intakeMotor.set(0.9);
-    }
-
-    public void stopIntake() {
-      intakeMotor.set(0.0);
-    }
-}
-  public intake() {
+  public void runIntake() {
+    TalonFX.set(0.9);
   }
+
+  public void stopIntake() {
+    TalonFX.set(0.0);
+  }
+
+    
+
 
   @Override
   public void periodic() {

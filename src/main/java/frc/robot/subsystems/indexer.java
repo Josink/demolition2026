@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -26,6 +27,12 @@ public class indexer extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  public void rotateToVelocity(double velocity){
+    final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
+    indexerMotor.setControl(request);
+  }
+    
 
   public void applyIndexerMotorConfigs(){
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration();

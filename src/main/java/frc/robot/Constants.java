@@ -24,7 +24,6 @@ public class Constants {
         public static final int MotionMagicAcceleration = 600;
         public static final int MotionMagicJerk = 1000;
 
-
         //slot 0 PID values SHOOTER MOTORS
         public static final double SkP = 0.1;
         public static final double SkI = 0.0;
@@ -37,6 +36,10 @@ public class Constants {
         public static final int SMotionMagicCruiseVelocity = 1500;
         public static final int SMotionMagicAcceleration = 600;
         public static final int SMotionMagicJerk = 1000;
+
+        //setpoints
+        public static final int ScoreSetpoint = 50;
+        public static final int shootSpeedSetPoint = 30;
     }
 
     public static final class intakeConstants {
@@ -54,6 +57,9 @@ public class Constants {
         public static final int MotionMagicCruiseVelocity = 1500;
         public static final int MotionMagicAcceleration = 600;
         public static final int MotionMagicJerk = 1000;
+
+        //velocity setpoint
+        public static final int intakeSpeedSetPoint = 30;
     }
 
     public static final class indexerConstants {
@@ -71,6 +77,9 @@ public class Constants {
         public static final int MotionMagicCruiseVelocity = 1500;
         public static final int MotionMagicAcceleration = 600;
         public static final int MotionMagicJerk = 1000;
+
+        //velocity setpoint
+        public static final int indexSpeedSetPoint = 30;
     }
 
     

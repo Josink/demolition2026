@@ -32,7 +32,6 @@ public class indexer extends SubsystemBase {
     final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
     indexerMotor.setControl(request);
   }
-    
 
   public void applyIndexerMotorConfigs(){
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration();

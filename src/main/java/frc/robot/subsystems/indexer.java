@@ -18,10 +18,11 @@ import frc.robot.Constants;
 public class indexer extends SubsystemBase {
   /** Creates a new indexer. */
   private TalonFX indexerMotor = new TalonFX(Constants.indexerConstants.indexerMotorID);
-  private TalonFX mMotor = new TalonFX(6);
+  private TalonFX mMotor = new TalonFX(Constants.indexerConstants.mMotorID);
 
   public indexer() {
     applyIndexerMotorConfigs();
+    applymMotorConfigs();
   }
 
   @Override
@@ -32,6 +33,9 @@ public class indexer extends SubsystemBase {
   public void rotateToVelocity(double velocity){
     final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
     indexerMotor.setControl(request);
+
+    final MotionMagicVelocityTorqueCurrentFOC mRequest =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
+    mMotor.setControl(mRequest);
   }
 
   public void applyIndexerMotorConfigs(){
@@ -59,6 +63,34 @@ public class indexer extends SubsystemBase {
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     indexerMotor.getConfigurator().apply(motorOutputConfigs);
+
+  }
+
+    public void applymMotorConfigs(){
+    TalonFXConfiguration talonconfigs = new TalonFXConfiguration();
+
+    talonconfigs.Slot0.kP = Constants.indexerConstants.mkP;
+    talonconfigs.Slot0.kI = Constants.indexerConstants.mkI;
+    talonconfigs.Slot0.kD = Constants.indexerConstants.mkD;
+    talonconfigs.Slot0.kV = Constants.indexerConstants.mkv;
+    talonconfigs.Slot0.kS = Constants.indexerConstants.mks;
+    talonconfigs.Slot0.kA = Constants.indexerConstants.mka;
+
+    var motionMagicConfigs = talonconfigs.MotionMagic;
+    motionMagicConfigs.MotionMagicCruiseVelocity = Constants.indexerConstants.mMotionMagicCruiseVelocity;
+    motionMagicConfigs.MotionMagicAcceleration = Constants.indexerConstants.mMotionMagicAcceleration;
+    motionMagicConfigs.MotionMagicJerk = Constants.indexerConstants.mMotionMagicJerk;
+
+    talonconfigs.Feedback.FeedbackRemoteSensorID = mMotor.getDeviceID();
+    talonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    
+    mMotor.getConfigurator().apply(talonconfigs);
+
+    MotorOutputConfigs motorOutputConfigs = talonconfigs.MotorOutput;
+    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+
+    mMotor.getConfigurator().apply(motorOutputConfigs);
 
   }
 }

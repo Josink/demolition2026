@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Turret;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -42,6 +43,7 @@ public class RobotContainer {
     private final CommandXboxController OperatorJoystick = new CommandXboxController(1); // My OperatorJoystick
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final Turret turret = new Turret();
 
     /* Path follower */
     //private final SendableChooser<Command> autoChooser;
@@ -95,6 +97,10 @@ public class RobotContainer {
         DriverJoystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+
+        //OPERATPOR JOYSTICK BINDINGS
+        turret.setDefaultCommand(turret.run(()->turret.setTurret(OperatorJoystick.getRightX())));
     }
 
     public Command getAutonomousCommand() {

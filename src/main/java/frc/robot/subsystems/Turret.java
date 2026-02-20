@@ -85,7 +85,7 @@ public class Turret extends SubsystemBase {
     motionMagicConfigs.MotionMagicAcceleration = Constants.turretConstants.MotionMagicAcceleration;
     motionMagicConfigs.MotionMagicJerk = Constants.turretConstants.MotionMagicJerk;
 
-    talonconfigs.Feedback.FeedbackRemoteSensorID = turretMotor.getDeviceID();
+    talonconfigs.Feedback.FeedbackRemoteSensorID = Constants.turretConstants.TurretEncoderID;
     talonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
    
     turretMotor.getConfigurator().apply(talonconfigs);

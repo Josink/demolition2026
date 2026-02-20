@@ -3,9 +3,10 @@ package frc.robot;
 public class Constants {
 
     public static final class turretConstants {
-        public static final int TurretMotorID = 1;
-        public static final int lShootingMotorID = 2;
-        public static final int rShootingMotorID = 3;
+        public static final int TurretMotorID = 50;
+        public static final int rShootingMotorID = 51;
+        public static final int lShootingMotorID = 52;
+        public static final int TurretEncoderID = 0;
 
         public static final int SensorToMechanismRatio = 1;
         public static final int ForwardSoftLimitThreshold = 1000;

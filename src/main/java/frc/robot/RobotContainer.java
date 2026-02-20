@@ -60,12 +60,12 @@ public class RobotContainer {
 
     private void configureBindings() {
 
-    drivetrain.setDefaultCommand(
-        new SwerveDrive(
-            drivetrain, 
-            DriverJoystick
-        )
-    );
+        drivetrain.setDefaultCommand(
+            new SwerveDrive(
+                drivetrain, 
+                DriverJoystick
+            )
+        );
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -100,7 +100,10 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
-        turret.setDefaultCommand(turret.run(()->turret.setTurret(OperatorJoystick.getRightX())));
+        //shoot
+        OperatorJoystick.rightTrigger.onTrue(turret.run()->turret.rotateToVelocity(MathUtil.applyDeadband(driverController.getRightTriggerAxis(), 0.1)));
+        //rotate turret
+        OperatorJoystick.rightStick.onTrue(turret.run()-> turret.setTurret(MathUtil.applyDeadband(driverController.getRightX(), 0.1)));
     }
 
     public Command getAutonomousCommand() {

@@ -94,7 +94,7 @@ public class Turret extends SubsystemBase {
     turretMotor.getConfigurator().apply(talonconfigs);
 
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-    motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     turretMotor.getConfigurator().apply(motorOutputConfigs);

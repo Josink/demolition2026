@@ -21,6 +21,7 @@ import frc.robot.Constants;
 public class Turret extends SubsystemBase {
   /** Creates a new Turret. */
   private TalonFX turretMotor = new TalonFX(Constants.turretConstants.TurretMotorID);
+  private TalonFX turretEncoder = new TalonFX(Constants.turretContants.TurretEncoderID);
   private TalonFX lShootingMotor = new TalonFX(Constants.turretConstants.lShootingMotorID);
   private TalonFX rShootingMotor = new TalonFX(Constants.turretConstants.rShootingMotorID);
   
@@ -39,15 +40,15 @@ public class Turret extends SubsystemBase {
   }
 
   public double getTurretPosition(){
-    return turretMotor.getPosition().getValueAsDouble();
+    return turretEncoder.getPosition().getValueAsDouble();
   }
 
   public void setTurretPosition(double position){
-    turretMotor.setPosition(position);
+    turretEncoder.setPosition(position);
   }
 
   public void resetTurretPosition(){
-    turretMotor.setPosition(0);
+    turretEncoder.setPosition(0);
   }
 
   public void rotateToPos(double position){

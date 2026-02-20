@@ -34,6 +34,10 @@ public class Turret extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public void setTurret(double power){
+    turretMotor.set(power);
+  }
+
   public double getTurretPosition(){
     return turretMotor.getPosition().getValueAsDouble();
   }

@@ -9,11 +9,10 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -100,11 +99,18 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
-        //shoot
-        OperatorJoystick.rightTrigger.onTrue(turret.run()->turret.rotateToVelocity(MathUtil.applyDeadband(driverController.getRightTriggerAxis(), 0.1)));
-        //rotate turret
-        OperatorJoystick.rightStick.onTrue(turret.run()-> turret.setTurret(MathUtil.applyDeadband(driverController.getRightX(), 0.1)));
+        
+        turret.setDefaultCommand(turret.run(()->turret.manualControl(
+            (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15),
+            MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1),
+            OperatorJoystick.leftTrigger(),
+            24,
+            OperatorJoystick.rightTrigger(), 
+            60)));
+
     }
+
+
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */

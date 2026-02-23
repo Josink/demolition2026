@@ -1,0 +1,10 @@
+package frc.robot.commands;
+
+
+public class AddVisionMeasurement extends Command{
+
+  public AddVisionMeasurement(){
+
+  }
+
+}

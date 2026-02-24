@@ -44,6 +44,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Turret turret = new Turret();
 
+    public static Vision visionInstance = new Vision();
+
     /* Path follower */
     //private final SendableChooser<Command> autoChooser;
 

@@ -10,9 +10,40 @@ import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.PoseEstimate;
 
 public class Vision extends SubsystemBase {
+  private final CommandSwerveDrivetrain drivetrain;
+
   private static final String LL_FRONT = "limelight-front";  
   private static final String LL_LEFT  = "limelight-left";   
   private static final String LL_RIGHT = "limelight-right";
+
+  public Vision(CommandSwerveDrivetrain drivetrain) {
+    this.drivetrain = drivetrain;
+  }
+
+  @Override
+  public void periodic() {
+    PoseEstimate estimate = getBestPoseEstimate();
+  
+    if (!isValid(estimate)) return;
+  
+    // Reject bad data
+    if (estimate.tagCount < 1) return;
+  
+    // Reject if robot rotating too fast (optional but recommended)
+    if (Math.abs(drivetrain.getState().Speeds.omegaRadiansPerSecond) > 3.0)
+        return;
+  
+    // Dynamically adjust trust
+    var stdDevs = estimate.tagCount >= 2
+        ? VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(3))
+        : VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(10));
+  
+    drivetrain.addVisionMeasurement(
+        estimate.pose,
+        estimate.timestampSeconds,
+        stdDevs
+    );
+  }
 
   public PoseEstimate getBestPoseEstimate() {
 
@@ -31,7 +62,12 @@ public class Vision extends SubsystemBase {
   }
 
   private boolean isValid(PoseEstimate pose) {
-    return pose != null && pose.tagCount > 0;
+    return pose != null
+        && pose.tagCount > 0
+        && pose.pose.getX() > 0.0
+        && pose.pose.getX() < 17.0
+        && pose.pose.getY() > 0.0
+        && pose.pose.getY() < 9.0;
   }
 
   public Pose2d getRobotPose() {

@@ -129,7 +129,7 @@ public class Turret extends SubsystemBase {
 
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
     motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    motorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+    motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     turretMotor.getConfigurator().apply(motorOutputConfigs);
   }

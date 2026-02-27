@@ -278,6 +278,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        telemetry.telemeterize(getState());
     }
 
     private void startSimThread() {

@@ -27,7 +27,8 @@ public class Vision extends SubsystemBase {
     PoseEstimate estimate = getBestPoseEstimate();
   
     if (!isValid(estimate)) return;
-  
+
+    if (estimate.tagCount == 1 && estimate.ambiguity > 0.2) return;
   
     // Reject if robot rotating too fast (optional but recommended)
     if (Math.abs(drivetrain.getState().Speeds.omegaRadiansPerSecond) > 3.0)

@@ -25,6 +25,8 @@ public class Robot extends TimedRobot {
     public Robot() {
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
+        speedLog = new DoubleLogEntry(DataLogManager.getLog(), "/Drivetrain/Speed");
+
         m_robotContainer = new RobotContainer();
     }
 

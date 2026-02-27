@@ -18,7 +18,6 @@ import frc.robot.Constants;
 public class indexer extends SubsystemBase {
   /** Creates a new indexer. */
   private TalonFX indexerMotor = new TalonFX(Constants.indexerConstants.indexerMotorID);
-  private TalonFX mMotor = new TalonFX(Constants.indexerConstants.mMotorID);
 
   public indexer() {
     applyIndexerMotorConfigs();

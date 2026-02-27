@@ -279,7 +279,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-        telemetry.telemeterize(getState());
     }
 
     private void startSimThread() {

@@ -74,6 +74,19 @@ public class Turret extends SubsystemBase {
     turretMotor.setControl(request);
   }
 
+  public void setTurretAngleDegrees(double degrees) {
+
+    // Normalize to -180 to 180
+    degrees = Math.IEEEremainder(degrees, 360);
+
+    // Clamp to mechanical limits
+    degrees = Math.max(-180.0, Math.min(180.0, degrees));
+
+    double rotations = degrees / 360.0;
+
+    rotateToPos(rotations);
+}
+
   public void rotateToVelocity(double velocity){
     final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
     rShootingMotor.setControl(request);

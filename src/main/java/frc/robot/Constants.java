@@ -1,5 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+
 public class Constants {
 
     public static final class turretConstants {
@@ -103,7 +108,16 @@ public class Constants {
 
     }
 
-    
+    public static final class fieldConstants {
+        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 
+        public static Pose2d aprilTagIDToPose(int id){
+            return APRIL_TAG_FIELD_LAYOUT.getTagPose(id).get().toPose2d();
+        }
+
+        public Translation2d getAprilTagTranslation(int id){
+            return APRIL_TAG_FIELD_LAYOUT.getTagPose(id).get().toPose2d().getTranslation();
+        }
+    }
 
 }

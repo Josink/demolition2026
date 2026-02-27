@@ -279,9 +279,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-        var speeds = getState().Speeds;
-        SmartDashboard.putNumber("vx", speeds.vxMetersPerSecond);
-        SmartDashboard.putNumber("vy", speeds.vyMetersPerSecond);
+        var speeds = drivetrain.getState().Speeds;
+        double speed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        speedLog.append(speed);
     }
 
     private void startSimThread() {

@@ -278,10 +278,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-
-        var speeds = drivetrain.getState().Speeds;
-        double speed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
-        speedLog.append(speed);
     }
 
     private void startSimThread() {

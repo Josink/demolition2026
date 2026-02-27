@@ -28,8 +28,6 @@ public class Vision extends SubsystemBase {
   
     if (!isValid(estimate)) return;
   
-    // Reject bad data
-    if (estimate.tagCount < 1) return;
   
     // Reject if robot rotating too fast (optional but recommended)
     if (Math.abs(drivetrain.getState().Speeds.omegaRadiansPerSecond) > 3.0)

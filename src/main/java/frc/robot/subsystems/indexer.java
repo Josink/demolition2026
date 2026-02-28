@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
@@ -33,6 +35,14 @@ public class indexer extends SubsystemBase {
     indexerMotor.setControl(request);
   }
 
+  public void manualControl(BooleanSupplier index, double velocity){
+    if (index.getAsBoolean()){
+      rotateToVelocity(velocity);
+    } else {
+      rotateToVelocity(0);
+    }
+  }
+  
   public void applyIndexerMotorConfigs(){
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration();
 

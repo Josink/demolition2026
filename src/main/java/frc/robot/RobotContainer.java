@@ -24,6 +24,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.indexer;
+import frc.robot.subsystems.intake;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -39,6 +41,8 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Turret turret = new Turret();
+    public final intake Intake = new intake();
+    public final indexer Indexer = new indexer();
 
     public final Vision vision = new Vision(drivetrain);
 
@@ -97,18 +101,24 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
+        Intake.setDefaultCommand(Intake.run(()->Intake.manualControl(
+            OperatorJoystick.leftBumper(), 
+            OperatorJoystick.rightBumper(), 
+            OperatorJoystick.leftTrigger(), 
+            50)));
         
-        turret.setDefaultCommand(turret.run(()->turret.manualControl(
-            (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15),
-            MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1),
-            OperatorJoystick.leftTrigger(),
-            24,
+        Indexer.setDefaultCommand(Indexer.run(()->Indexer.manualControl(
             OperatorJoystick.rightTrigger(), 
             60)));
 
+        turret.setDefaultCommand(turret.run(()->turret.manualControl(
+            (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15),
+            MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1),
+            OperatorJoystick.x(),
+            24,
+            OperatorJoystick.rightTrigger(), 
+            60)));
     }
-
-
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
@@ -12,12 +14,16 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class intake extends SubsystemBase {
   /** Creates a new intake. */
   private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID);
+  private final Solenoid intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+
 
   public intake() {
     applyIntakeMotorConfigs();
@@ -28,9 +34,30 @@ public class intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public void setIntakeSolenoid(boolean state){
+    intakeSolenoid.set(state);
+  }
+
   public void rotateToVelocity(double velocity){
     final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
     intakeMotor.setControl(request);
+  }
+
+  public void manualControl(BooleanSupplier up, BooleanSupplier down, BooleanSupplier intake, double velocity){
+    if(up.getAsBoolean()){
+      setIntakeSolenoid(true);
+    } else if(down.getAsBoolean()){
+      setIntakeSolenoid(false);
+    } else {
+      setIntakeSolenoid(false);
+    }
+
+    if (intake.getAsBoolean()){
+      rotateToVelocity(velocity);
+    } else {
+      rotateToVelocity(0);
+    }
+
   }
 
   private void applyIntakeMotorConfigs(){

@@ -25,20 +25,15 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     PoseEstimate estimate = getBestPoseEstimate();
-  
     if (!isValid(estimate)) return;
 
-    if (estimate.tagCount == 1 && estimate.ambiguity > 0.2) return;
-  
-    // Reject if robot rotating too fast (optional but recommended)
     if (Math.abs(drivetrain.getState().Speeds.omegaRadiansPerSecond) > 3.0)
         return;
-  
-    // Dynamically adjust trust
+
     var stdDevs = estimate.tagCount >= 2
         ? VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(3))
         : VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(10));
-  
+
     drivetrain.addVisionMeasurement(
         estimate.pose,
         estimate.timestampSeconds,

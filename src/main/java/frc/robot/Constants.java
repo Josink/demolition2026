@@ -16,7 +16,7 @@ public class Constants {
 
         public static final int SensorToMechanismRatio = 48;
         public static final double ForwardSoftLimitThreshold = 0.5; //0
-        public static final double ReverseSoftLimitThreshold = -0.5; // 48 no more than one full rotation either way
+        public static final double ReverseSoftLimitThreshold = -0.5; //no more than one half rotation either way
 
         //slot 0 PID values TURRET MOTOR
         public static final double kP = 0.3;
@@ -109,14 +109,14 @@ public class Constants {
     }
 
     public static final class fieldConstants {
-        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+        public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 
         public static Pose2d aprilTagIDToPose(int id){
-            return APRIL_TAG_FIELD_LAYOUT.getTagPose(id).get().toPose2d();
+            return aprilTagFieldLayout.getTagPose(id).get().toPose2d();
         }
 
         public Translation2d getAprilTagTranslation(int id){
-            return APRIL_TAG_FIELD_LAYOUT.getTagPose(id).get().toPose2d().getTranslation();
+            return aprilTagFieldLayout.getTagPose(id).get().toPose2d().getTranslation();
         }
     }
 

@@ -44,7 +44,7 @@ public class RobotContainer {
     public final intake Intake = new intake();
     public final indexer Indexer = new indexer();
 
-    public final Vision vision = new Vision(drivetrain);
+    //public final Vision vision = new Vision(drivetrain);
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -115,7 +115,7 @@ public class RobotContainer {
             (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15),
             MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1),
             OperatorJoystick.x(),
-            24,
+            0.5,
             OperatorJoystick.rightTrigger(), 
             60)));
     }

@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,11 +23,13 @@ import frc.robot.Constants;
 public class intake extends SubsystemBase {
   /** Creates a new intake. */
   private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID);
-  private final Solenoid intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
 
+  private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+  private final Solenoid intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
 
   public intake() {
     applyIntakeMotorConfigs();
+    compressor.enableDigital();
   }
 
   @Override

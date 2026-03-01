@@ -50,7 +50,7 @@ public class Constants {
     }
 
     public static final class intakeConstants {
-        public static final int intakeMotorID = 4;
+        public static final int intakeMotorID = 60;
 
         //slot 0 PID values
         public static final double kP = 0.1;
@@ -70,7 +70,7 @@ public class Constants {
     }
 
     public static final class indexerConstants {
-        public static final int indexerMotorID = 5;
+        public static final int indexerMotorID = 10;
         public static final int mMotorID = 6;
 
         //slot 0 PID values

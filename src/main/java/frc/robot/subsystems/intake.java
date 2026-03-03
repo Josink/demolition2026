@@ -15,8 +15,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -25,7 +25,7 @@ public class intake extends SubsystemBase {
   private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID);
 
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
-  private final Solenoid intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+  private final DoubleSolenoid intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
 
   public intake() {
     applyIntakeMotorConfigs();
@@ -37,8 +37,12 @@ public class intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public void suck(double speed){
+    intakeMotor.set(speed);
+  }
+
   public void setIntakeSolenoid(boolean state){
-    intakeSolenoid.set(state);
+    intakeSolenoid.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
   }
 
   public void rotateToVelocity(double velocity){
@@ -46,19 +50,13 @@ public class intake extends SubsystemBase {
     intakeMotor.setControl(request);
   }
 
-  public void manualControl(BooleanSupplier up, BooleanSupplier down, BooleanSupplier intake, double velocity){
-    if(up.getAsBoolean()){
-      setIntakeSolenoid(true);
-    } else if(down.getAsBoolean()){
-      setIntakeSolenoid(false);
-    } else {
-      setIntakeSolenoid(false);
-    }
+  public void manualControl(BooleanSupplier down, boolean intake, double velocity){
+    setIntakeSolenoid(down.getAsBoolean());
 
-    if (intake.getAsBoolean()){
+    if (intake){
       rotateToVelocity(velocity);
     } else {
-      rotateToVelocity(0);
+      suck(0);
     }
 
   }

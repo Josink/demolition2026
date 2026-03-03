@@ -102,13 +102,12 @@ public class RobotContainer {
 
         //OPERATPOR JOYSTICK BINDINGS
         Intake.setDefaultCommand(Intake.run(()->Intake.manualControl(
-            OperatorJoystick.leftBumper(), 
-            OperatorJoystick.rightBumper(), 
-            OperatorJoystick.leftTrigger(), 
+            OperatorJoystick.leftBumper(),  
+            OperatorJoystick.getLeftTriggerAxis() >= 0.1, 
             50)));
         
         Indexer.setDefaultCommand(Indexer.run(()->Indexer.manualControl(
-            OperatorJoystick.rightTrigger(), 
+            OperatorJoystick.getRightTriggerAxis() >= 0.1, 
             60)));
 
         turret.setDefaultCommand(turret.run(()->turret.manualControl(
@@ -117,7 +116,7 @@ public class RobotContainer {
             OperatorJoystick.x(),
             0.5,
             OperatorJoystick.rightTrigger(), 
-            60)));
+            80)));
     }
 
     public Command getAutonomousCommand() {

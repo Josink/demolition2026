@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
@@ -30,16 +28,20 @@ public class indexer extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public void index(double speed){
+    indexerMotor.set(speed);
+  }
+
   public void rotateToVelocity(double velocity){
     final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
     indexerMotor.setControl(request);
   }
 
-  public void manualControl(BooleanSupplier index, double velocity){
-    if (index.getAsBoolean()){
+  public void manualControl(boolean index, double velocity){
+    if (index){
       rotateToVelocity(velocity);
     } else {
-      rotateToVelocity(0);
+      index(0);
     }
   }
   
@@ -68,6 +70,5 @@ public class indexer extends SubsystemBase {
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     indexerMotor.getConfigurator().apply(motorOutputConfigs);
-
   }
 }

@@ -32,7 +32,7 @@ public class Constants {
         public static final int MotionMagicJerk = 1000;
 
         //slot 0 PID values SHOOTER MOTORS
-        public static final double SkP = 0.1;
+        public static final double SkP = 0.3;
         public static final double SkI = 0.0;
         public static final double SkD = 0.0;
         public static final double Skv = 0.0;
@@ -53,7 +53,7 @@ public class Constants {
         public static final int intakeMotorID = 60;
 
         //slot 0 PID values
-        public static final double kP = 0.1;
+        public static final double kP = 0.3;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kv = 0.0;

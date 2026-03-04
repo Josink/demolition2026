@@ -97,7 +97,7 @@ public class Turret extends SubsystemBase {
     if (rotate){
       rotateTurret(tVelocity);
     } else if (toPos.getAsBoolean()){
-      rotateToPos(pos);
+      setTurretAngleDegrees(pos);
     }else {
       rotateTurret(0);
     }

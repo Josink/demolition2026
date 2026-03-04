@@ -93,11 +93,11 @@ public class Turret extends SubsystemBase {
     funnelMotor.setControl(request);
   }
 
-  public void manualControl(boolean rotate, double tVelocity, BooleanSupplier toPos, double pos,  BooleanSupplier toShoot, double velocity){
+  public void manualControl(boolean rotate, double tVelocity, BooleanSupplier toPos, double degrees,  BooleanSupplier toShoot, double velocity){
     if (rotate){
       rotateTurret(tVelocity);
     } else if (toPos.getAsBoolean()){
-      setTurretAngleDegrees(pos);
+      setTurretAngleDegrees(degrees);
     }else {
       rotateTurret(0);
     }

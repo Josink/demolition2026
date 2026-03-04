@@ -20,14 +20,14 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class intake extends SubsystemBase {
+public class Intake extends SubsystemBase {
   /** Creates a new intake. */
-  private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID);
+  private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID, "4998Canivore");
 
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
   private final DoubleSolenoid intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
 
-  public intake() {
+  public Intake() {
     applyIntakeMotorConfigs();
     compressor.enableDigital();
   }
@@ -42,7 +42,7 @@ public class intake extends SubsystemBase {
   }
 
   public void setIntakeSolenoid(boolean state){
-    intakeSolenoid.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+    intakeSolenoid.set(state ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
   }
 
   public void rotateToVelocity(double velocity){
@@ -50,10 +50,10 @@ public class intake extends SubsystemBase {
     intakeMotor.setControl(request);
   }
 
-  public void manualControl(BooleanSupplier down, boolean intake, double velocity){
+  public void manualControl(BooleanSupplier down, BooleanSupplier intake, double velocity){
     setIntakeSolenoid(down.getAsBoolean());
 
-    if (intake){
+    if (intake.getAsBoolean()){
       rotateToVelocity(velocity);
     } else {
       suck(0);
@@ -81,7 +81,7 @@ public class intake extends SubsystemBase {
 
     intakeMotor.getConfigurator().apply(talonconfigs);
 
-    MotorOutputConfigs motorOutputConfigs = talonconfigs.MotorOutput;
+    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
     motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 

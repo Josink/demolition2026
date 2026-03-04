@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
 
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -46,7 +45,7 @@ public class Turret extends SubsystemBase {
   }
 
   public double getTurretPosition(){
-    return turretEncoder.getPosition().getValueAsDouble();
+    return turretMotor.getPosition().getValueAsDouble();
   }
 
   public void setTurretPosition(double position){
@@ -114,9 +113,6 @@ public class Turret extends SubsystemBase {
   private void applyTurretMotorConfigs(){
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration(); 
 
-    FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
-    feedbackConfigs.SensorToMechanismRatio = Constants.turretConstants.SensorToMechanismRatio;
-
     SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonconfigs.SoftwareLimitSwitch;
     softwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
     softwareLimitSwitchConfigs.ForwardSoftLimitThreshold = Constants.turretConstants.ForwardSoftLimitThreshold;
@@ -136,7 +132,8 @@ public class Turret extends SubsystemBase {
     motionMagicConfigs.MotionMagicJerk = Constants.turretConstants.MotionMagicJerk;
 
     talonconfigs.Feedback.FeedbackRemoteSensorID = Constants.turretConstants.TurretEncoderID;
-    talonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    talonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    talonconfigs.Feedback.SensorToMechanismRatio = Constants.turretConstants.SensorToMechanismRatio;
    
     turretMotor.getConfigurator().apply(talonconfigs);
 
@@ -145,6 +142,7 @@ public class Turret extends SubsystemBase {
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     turretMotor.getConfigurator().apply(motorOutputConfigs);
+
   }
 
   private void applyShootingMotorConfigs(){

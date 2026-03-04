@@ -24,8 +24,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.indexer;
-import frc.robot.subsystems.intake;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -41,8 +41,8 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Turret turret = new Turret();
-    public final intake Intake = new intake();
-    public final indexer Indexer = new indexer();
+    public final Intake intake = new Intake();
+    public final Indexer indexer = new Indexer();
 
     //public final Vision vision = new Vision(drivetrain);
 
@@ -52,7 +52,6 @@ public class RobotContainer {
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
-
         configureBindings();
 
         // Warmup PathPlanner to avoid Java pauses
@@ -101,14 +100,14 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
-        Intake.setDefaultCommand(Intake.run(()->Intake.manualControl(
+        intake.setDefaultCommand(intake.run(()->intake.manualControl(
             OperatorJoystick.leftBumper(),  
-            OperatorJoystick.getLeftTriggerAxis() >= 0.1, 
+            OperatorJoystick.leftTrigger(), 
             50)));
         
-        Indexer.setDefaultCommand(Indexer.run(()->Indexer.manualControl(
-            OperatorJoystick.getRightTriggerAxis() >= 0.1, 
-            60)));
+        indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
+            OperatorJoystick.rightTrigger(), 
+            100)));
 
         turret.setDefaultCommand(turret.run(()->turret.manualControl(
             (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15),
@@ -116,7 +115,7 @@ public class RobotContainer {
             OperatorJoystick.x(),
             0.5,
             OperatorJoystick.rightTrigger(), 
-            80)));
+            100)));
     }
 
     public Command getAutonomousCommand() {

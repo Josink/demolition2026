@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
@@ -15,11 +17,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class indexer extends SubsystemBase {
+public class Indexer extends SubsystemBase {
   /** Creates a new indexer. */
-  private TalonFX indexerMotor = new TalonFX(Constants.indexerConstants.indexerMotorID);
+  private TalonFX indexerMotor = new TalonFX(Constants.indexerConstants.indexerMotorID, "4998Canivore");
 
-  public indexer() {
+  public Indexer() {
     applyIndexerMotorConfigs();
   }
 
@@ -37,8 +39,8 @@ public class indexer extends SubsystemBase {
     indexerMotor.setControl(request);
   }
 
-  public void manualControl(boolean index, double velocity){
-    if (index){
+  public void manualControl(BooleanSupplier index, double velocity){
+    if (index.getAsBoolean()){
       rotateToVelocity(velocity);
     } else {
       index(0);
@@ -66,7 +68,7 @@ public class indexer extends SubsystemBase {
     indexerMotor.getConfigurator().apply(talonconfigs);
 
     MotorOutputConfigs motorOutputConfigs = talonconfigs.MotorOutput;
-    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     indexerMotor.getConfigurator().apply(motorOutputConfigs);

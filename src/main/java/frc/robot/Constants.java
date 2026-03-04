@@ -70,11 +70,10 @@ public class Constants {
     }
 
     public static final class indexerConstants {
-        public static final int indexerMotorID = 10;
-        public static final int mMotorID = 6;
+        public static final int indexerMotorID = 54;
 
         //slot 0 PID values
-        public static final double kP = 0.1;
+        public static final double kP = 0.3;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kv = 0.0;

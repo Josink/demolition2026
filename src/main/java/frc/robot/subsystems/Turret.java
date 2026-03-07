@@ -130,10 +130,11 @@ public class Turret extends SubsystemBase {
   }
 
   public void manualControl(boolean rotate, double tVelocity, BooleanSupplier toPos, double pos,  BooleanSupplier toShoot, double sVelocity, double fVelocity){
+  public void manualControl(boolean rotate, double tVelocity, BooleanSupplier toPos, double degrees,  BooleanSupplier toShoot, double velocity){
     if (rotate){
       rotateTurret(tVelocity);
     } else if (toPos.getAsBoolean()){
-      rotateToPos(pos);
+      setTurretAngleDegrees(degrees);
     }else {
       rotateTurret(0);
     }

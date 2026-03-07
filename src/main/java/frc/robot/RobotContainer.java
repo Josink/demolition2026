@@ -114,7 +114,7 @@ public class RobotContainer {
             (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15),
             MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1),
             OperatorJoystick.x(),
-            0.5,
+            50,
             OperatorJoystick.rightTrigger(), 
             100,
             70)));

@@ -15,8 +15,8 @@ public class Constants {
         public static final int TurretEncoderID = 0;
 
         public static final int SensorToMechanismRatio = 48;
-        public static final double ForwardSoftLimitThreshold = 0.5; //0
-        public static final double ReverseSoftLimitThreshold = -0.5; //no more than one half rotation either way
+        public static final double ForwardSoftLimitThreshold = 0.53; //0
+        public static final double ReverseSoftLimitThreshold = -0.53; //no more than one half rotation either way
 
         //slot 0 PID values TURRET MOTOR
         public static final double kP = 0.3;
@@ -32,12 +32,12 @@ public class Constants {
         public static final int MotionMagicJerk = 1000;
 
         //slot 0 PID values SHOOTER MOTORS
-        public static final double SkP = 0.3;
-        public static final double SkI = 0.0;
+        public static final double SkP = 3.8;
+        public static final double SkI = 0.5;
         public static final double SkD = 0.0;
-        public static final double Skv = 0.0;
+        public static final double Skv = 1;
         public static final double Sks = 0.0;
-        public static final double Ska = 0.0;
+        public static final double Ska = 1;
 
         //motion magic values
         public static final int SMotionMagicCruiseVelocity = 1500;

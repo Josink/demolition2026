@@ -24,12 +24,13 @@ public class Intake extends SubsystemBase {
   /** Creates a new intake. */
   private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID, "4998Canivore");
 
-  private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
-  private final DoubleSolenoid intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
+  private final Compressor compressor = new Compressor(2, PneumaticsModuleType.REVPH);
+  private final DoubleSolenoid intakeSolenoid = new DoubleSolenoid(2,PneumaticsModuleType.REVPH, 0, 1);
 
   public Intake() {
     applyIntakeMotorConfigs();
     compressor.enableDigital();
+    //setIntakeSolenoid(true, false);
   }
 
   @Override
@@ -41,8 +42,14 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(speed);
   }
 
-  public void setIntakeSolenoid(boolean state){
-    intakeSolenoid.set(state ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
+  public void setIntakeSolenoid(boolean down, boolean up){
+    if(down){
+      intakeSolenoid.set(DoubleSolenoid.Value.kForward);
+    } else if (up){
+      intakeSolenoid.set(DoubleSolenoid.Value.kReverse);
+    } else{
+      intakeSolenoid.set(DoubleSolenoid.Value.kOff);
+    }
   }
 
   public void rotateToVelocity(double velocity){
@@ -50,8 +57,8 @@ public class Intake extends SubsystemBase {
     intakeMotor.setControl(request);
   }
 
-  public void manualControl(BooleanSupplier down, BooleanSupplier intake, double velocity){
-    setIntakeSolenoid(down.getAsBoolean());
+  public void manualControl(BooleanSupplier down, BooleanSupplier up, BooleanSupplier intake, double velocity){
+    setIntakeSolenoid(down.getAsBoolean(), up.getAsBoolean());
 
     if (intake.getAsBoolean()){
       rotateToVelocity(velocity);

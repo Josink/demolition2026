@@ -4,22 +4,29 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 
 public class Turret extends SubsystemBase {
@@ -30,11 +37,35 @@ public class Turret extends SubsystemBase {
   private TalonFX rShootingMotor = new TalonFX(Constants.turretConstants.rShootingMotorID,"4998Canivore");
   private TalonFX funnelMotor = new TalonFX(Constants.turretConstants.funnelMotorID, "4998Canivore");
 
+  private final SysIdRoutine shooterSysId;
+
   final DutyCycleOut rotate = new DutyCycleOut(0);
 
    public Turret() {
     applyTurretMotorConfigs();
     applyShootingMotorConfigs();
+
+    lShootingMotor.setControl(new Follower(Constants.turretConstants.rShootingMotorID, MotorAlignmentValue.Opposed));
+
+    VoltageOut request = new VoltageOut(0);
+    shooterSysId = new SysIdRoutine(
+      new SysIdRoutine.Config(),
+
+      new SysIdRoutine.Mechanism(
+        volts ->{
+          request.Output = volts.in(Volts);
+          rShootingMotor.setControl(request);
+        }, 
+
+        log ->{
+          log.motor("rShootingMotor")
+          .voltage(Volts.of(rShootingMotor.getMotorVoltage().getValueAsDouble()))
+          .angularVelocity(rShootingMotor.getVelocity().getValue());
+        }, 
+        
+        this)
+      );
+
   }
   
   @Override
@@ -56,9 +87,11 @@ public class Turret extends SubsystemBase {
     turretEncoder.setPosition(0);
   }
   
-  public void shoot(double speed){
+  public void stopShooter(double speed){
     rShootingMotor.set(speed);
-    lShootingMotor.set(speed);
+  }
+
+  public void stopFunnel(double speed){
     funnelMotor.set(speed);
   }
 
@@ -89,11 +122,14 @@ public class Turret extends SubsystemBase {
   public void rotateToVelocity(double velocity){
     final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
     rShootingMotor.setControl(request);
-    lShootingMotor.setControl(request);
+  }
+
+  public void rotateFunnelToVelocity(double Velocity){
+    final MotionMagicVelocityTorqueCurrentFOC request = new MotionMagicVelocityTorqueCurrentFOC(Velocity);
     funnelMotor.setControl(request);
   }
 
-  public void manualControl(boolean rotate, double tVelocity, BooleanSupplier toPos, double pos,  BooleanSupplier toShoot, double velocity){
+  public void manualControl(boolean rotate, double tVelocity, BooleanSupplier toPos, double pos,  BooleanSupplier toShoot, double sVelocity, double fVelocity){
     if (rotate){
       rotateTurret(tVelocity);
     } else if (toPos.getAsBoolean()){
@@ -103,12 +139,29 @@ public class Turret extends SubsystemBase {
     }
     
     if(toShoot.getAsBoolean()){
-      rotateToVelocity(velocity);
+      rotateToVelocity(sVelocity);
+      rotateFunnelToVelocity(fVelocity);
     } else {
-      shoot(0);
+      stopShooter(0);
+      stopFunnel(0);
     }
   }
 
+  public Command sysIdQuasistaticForward() {
+  return shooterSysId.quasistatic(SysIdRoutine.Direction.kForward);
+}
+
+public Command sysIdQuasistaticReverse() {
+  return shooterSysId.quasistatic(SysIdRoutine.Direction.kReverse);
+}
+
+public Command sysIdDynamicForward() {
+  return shooterSysId.dynamic(SysIdRoutine.Direction.kForward);
+}
+
+public Command sysIdDynamicReverse() {
+  return shooterSysId.dynamic(SysIdRoutine.Direction.kReverse);
+}
 
   private void applyTurretMotorConfigs(){
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration(); 
@@ -160,7 +213,6 @@ public class Turret extends SubsystemBase {
     motionMagicConfigs.MotionMagicAcceleration = Constants.turretConstants.SMotionMagicAcceleration;
     motionMagicConfigs.MotionMagicJerk = Constants.turretConstants.SMotionMagicJerk;
 
-    talonconfigs.Feedback.FeedbackRemoteSensorID = lShootingMotor.getDeviceID();
     talonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
    
     lShootingMotor.getConfigurator().apply(talonconfigs);
@@ -169,11 +221,11 @@ public class Turret extends SubsystemBase {
 
     MotorOutputConfigs rmotorOutputConfigs = new MotorOutputConfigs();
     rmotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
-    rmotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    rmotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     MotorOutputConfigs lmotorOutputConfigs = new MotorOutputConfigs();
     lmotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    lmotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    lmotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     lShootingMotor.getConfigurator().apply(lmotorOutputConfigs);
     funnelMotor.getConfigurator().apply(lmotorOutputConfigs); 

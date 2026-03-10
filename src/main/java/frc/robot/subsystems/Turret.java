@@ -16,7 +16,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -34,7 +33,6 @@ import frc.robot.Constants;
 public class Turret extends SubsystemBase {
   /** Creates a new Turret. */
   private TalonFX turretMotor = new TalonFX(Constants.turretConstants.TurretMotorID,"4998Canivore");
-  private CANcoder turretEncoder = new CANcoder(Constants.turretConstants.TurretEncoderID, "4998Canivore");
   private TalonFX lShootingMotor = new TalonFX(Constants.turretConstants.lShootingMotorID, "4998Canivore");
   private TalonFX rShootingMotor = new TalonFX(Constants.turretConstants.rShootingMotorID,"4998Canivore");
   private TalonFX funnelMotor = new TalonFX(Constants.turretConstants.funnelMotorID, "4998Canivore");
@@ -107,7 +105,7 @@ public class Turret extends SubsystemBase {
 
   public void rotateToVelocity(double velocity){
     shooterVelocityRequest.Velocity = velocity;
-    rShootingMotor.setControl(request);
+    rShootingMotor.setControl(shooterVelocityRequest);
   }
 
   public void rotateFunnelToVelocity(double Velocity){
@@ -140,8 +138,8 @@ public class Turret extends SubsystemBase {
       volts -> funnelMotor.setControl(new VoltageOut(volts.in(Volts))),
       log -> log.motor("funnelMotor")
           .voltage(Volts.of(funnelMotor.getMotorVoltage().getValueAsDouble()))
-          .angularVelocity(funnelMotor.getVelocity().getValueAsDouble())
-          .angularPosition(funnelMotor.getPosition().getValueAsDouble()),
+          .angularVelocity(funnelMotor.getVelocity().getValue())
+          .angularPosition(funnelMotor.getPosition().getValue()),
       this
         );
 
@@ -155,8 +153,8 @@ public class Turret extends SubsystemBase {
       volts -> rShootingMotor.setControl(new VoltageOut(volts.in(Volts))),
       log -> log.motor("rShootingMotor")
           .voltage(Volts.of(rShootingMotor.getMotorVoltage().getValueAsDouble()))
-          .angularVelocity(rShootingMotor.getVelocity().getValueAsDouble())
-          .angularPosition(rShootingMotor.getPosition().getValueAsDouble()),
+          .angularVelocity(rShootingMotor.getVelocity().getValue())
+          .angularPosition(rShootingMotor.getPosition().getValue()),
       this
         );
 

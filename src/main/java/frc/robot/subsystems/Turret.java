@@ -27,6 +27,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 import frc.robot.Constants;
 
 public class Turret extends SubsystemBase {
@@ -41,6 +43,7 @@ public class Turret extends SubsystemBase {
   private final SysIdRoutine funnelSysId;
 
   private final MotionMagicTorqueCurrentFOC positionRequest = new MotionMagicTorqueCurrentFOC(0);
+  private final MotionMagicVelocityTorqueCurrentFOC shooterVelocityRequest = new MotionMagicVelocityTorqueCurrentFOC(0);
 
   final DutyCycleOut rotate = new DutyCycleOut(0);
 
@@ -70,7 +73,7 @@ public class Turret extends SubsystemBase {
   }
 
   public void resetTurretPosition(){
-    turretEncoder.setPosition(0);
+    turretMotor.setPosition(0);
   }
   
   public void stopShooter(double speed){
@@ -103,7 +106,7 @@ public class Turret extends SubsystemBase {
   }
 
   public void rotateToVelocity(double velocity){
-    final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
+    shooterVelocityRequest.Velocity = velocity;
     rShootingMotor.setControl(request);
   }
 
@@ -117,9 +120,9 @@ public class Turret extends SubsystemBase {
       rotateTurret(tVelocity);
     } else if (toPos.getAsBoolean()){
       rotateToPos(pos);
-    } else if (!toPos.getAsBoolean()) {
-    stopTurret();
-}
+    } else {
+     stopTurret();
+  }
     
     if(toShoot.getAsBoolean()){
       rotateToVelocity(sVelocity);

@@ -137,8 +137,8 @@ public class Turret extends SubsystemBase {
       volts -> funnelMotor.setControl(new VoltageOut(volts.in(Volts))),
       log -> log.motor("funnelMotor")
           .voltage(Volts.of(funnelMotor.getMotorVoltage().getValueAsDouble()))
-          .angularVelocity(funnelMotor.getVelocity().getValue())
-          .angularPosition(funnelMotor.getPosition().getValue()),
+          .angularVelocity(funnelMotor.getVelocity().getValueAsDouble())
+          .angularPosition(funnelMotor.getPosition().getValueAsDouble()),
       this
         );
 
@@ -152,8 +152,8 @@ public class Turret extends SubsystemBase {
       volts -> rShootingMotor.setControl(new VoltageOut(volts.in(Volts))),
       log -> log.motor("rShootingMotor")
           .voltage(Volts.of(rShootingMotor.getMotorVoltage().getValueAsDouble()))
-          .angularVelocity(rShootingMotor.getVelocity().getValue())
-          .angularPosition(rShootingMotor.getPosition().getValue()),
+          .angularVelocity(rShootingMotor.getVelocity().getValueAsDouble())
+          .angularPosition(rShootingMotor.getPosition().getValueAsDouble()),
       this
         );
 

@@ -51,7 +51,7 @@ public class Turret extends SubsystemBase {
     lShootingMotor.setControl(new Follower(Constants.turretConstants.rShootingMotorID, MotorAlignmentValue.Opposed));
 
     funnelSysId = createFunnelSysId();
-    shooterSysId = createFunnelSysId();
+    shooterSysId = createShooterSysId();
   }
   
   @Override

@@ -38,34 +38,20 @@ public class Turret extends SubsystemBase {
   private TalonFX funnelMotor = new TalonFX(Constants.turretConstants.funnelMotorID, "4998Canivore");
 
   private final SysIdRoutine shooterSysId;
+  private final SysIdRoutine funnelSysId;
+
+  private final MotionMagicTorqueCurrentFOC positionRequest = new MotionMagicTorqueCurrentFOC(0);
 
   final DutyCycleOut rotate = new DutyCycleOut(0);
 
-   public Turret() {
+  public Turret() {
     applyTurretMotorConfigs();
     applyShootingMotorConfigs();
 
     lShootingMotor.setControl(new Follower(Constants.turretConstants.rShootingMotorID, MotorAlignmentValue.Opposed));
 
-    VoltageOut request = new VoltageOut(0);
-    shooterSysId = new SysIdRoutine(
-      new SysIdRoutine.Config(),
-
-      new SysIdRoutine.Mechanism(
-        volts ->{
-          request.Output = volts.in(Volts);
-          rShootingMotor.setControl(request);
-        }, 
-
-        log ->{
-          log.motor("rShootingMotor")
-          .voltage(Volts.of(rShootingMotor.getMotorVoltage().getValueAsDouble()))
-          .angularVelocity(rShootingMotor.getVelocity().getValue());
-        }, 
-        
-        this)
-      );
-
+    funnelSysId = createFunnelSysId();
+    shooterSysId = createFunnelSysId();
   }
   
   @Override
@@ -101,9 +87,13 @@ public class Turret extends SubsystemBase {
     turretMotor.setControl(rotate);
   }
 
+  public void stopTurret(){
+    turretMotor.set(0);
+  }
+
   public void rotateToPos(double position){
-    final MotionMagicTorqueCurrentFOC request =  new MotionMagicTorqueCurrentFOC(position);
-    turretMotor.setControl(request);
+    positionRequest.Position = position;
+    turretMotor.setControl(positionRequest);
   }
 
   public void setTurretAngleDegrees(double degrees) {
@@ -130,14 +120,13 @@ public class Turret extends SubsystemBase {
   }
 
   public void manualControl(boolean rotate, double tVelocity, BooleanSupplier toPos, double pos,  BooleanSupplier toShoot, double sVelocity, double fVelocity){
-    if (toPos.getAsBoolean()){
+   if (rotate){
+      rotateTurret(tVelocity);
+    } else if (toPos.getAsBoolean()){
       rotateToPos(pos);
-    } else if (rotate){
-      rotateToPos(tVelocity);
-    }
-    else {
-      rotateTurret(0);
-    }
+    } else if (!toPos.getAsBoolean()) {
+    stopTurret();
+}
     
     if(toShoot.getAsBoolean()){
       rotateToVelocity(sVelocity);
@@ -148,21 +137,68 @@ public class Turret extends SubsystemBase {
     }
   }
 
+  public SysIdRoutine createFunnelSysId(){
+    SysIdRoutine.Config config = new SysIdRoutine.Config();
+
+    SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
+      volts -> funnelMotor.setControl(new VoltageOut(volts.in(Volts))),
+      log -> log.motor("funnelMotor")
+          .voltage(Volts.of(funnelMotor.getMotorVoltage().getValueAsDouble()))
+          .angularVelocity(funnelMotor.getVelocity().getValue())
+          .angularPosition(funnelMotor.getPosition().getValue()),
+      this
+        );
+
+    return new SysIdRoutine(config, mechanism);
+  }
+
+  public SysIdRoutine createShooterSysId(){
+    SysIdRoutine.Config config = new SysIdRoutine.Config();
+
+    SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
+      volts -> rShootingMotor.setControl(new VoltageOut(volts.in(Volts))),
+      log -> log.motor("rShootingMotor")
+          .voltage(Volts.of(rShootingMotor.getMotorVoltage().getValueAsDouble()))
+          .angularVelocity(rShootingMotor.getVelocity().getValue())
+          .angularPosition(rShootingMotor.getPosition().getValue()),
+      this
+        );
+
+    return new SysIdRoutine(config, mechanism);
+  }
+
+  public Command sysIdFunnelQuasistaticForward() {
+    return funnelSysId.quasistatic(SysIdRoutine.Direction.kForward);
+  }
+
+  public Command sysIdFunnelQuasistaticReverse() {
+    return funnelSysId.quasistatic(SysIdRoutine.Direction.kReverse);
+  }
+
+  public Command sysIdFunnelDynamicForward() {
+    return funnelSysId.dynamic(SysIdRoutine.Direction.kForward);
+  }
+
+  public Command sysIdFunnelDynamicReverse() {
+    return funnelSysId.dynamic(SysIdRoutine.Direction.kReverse);
+  }
+
+  
   public Command sysIdQuasistaticForward() {
-  return shooterSysId.quasistatic(SysIdRoutine.Direction.kForward);
-}
+    return shooterSysId.quasistatic(SysIdRoutine.Direction.kForward);
+  }
 
-public Command sysIdQuasistaticReverse() {
-  return shooterSysId.quasistatic(SysIdRoutine.Direction.kReverse);
-}
+  public Command sysIdQuasistaticReverse() {
+    return shooterSysId.quasistatic(SysIdRoutine.Direction.kReverse);
+  }
 
-public Command sysIdDynamicForward() {
-  return shooterSysId.dynamic(SysIdRoutine.Direction.kForward);
-}
+  public Command sysIdDynamicForward() {
+    return shooterSysId.dynamic(SysIdRoutine.Direction.kForward);
+  }
 
-public Command sysIdDynamicReverse() {
-  return shooterSysId.dynamic(SysIdRoutine.Direction.kReverse);
-}
+  public Command sysIdDynamicReverse() {
+    return shooterSysId.dynamic(SysIdRoutine.Direction.kReverse);
+  }
 
   private void applyTurretMotorConfigs(){
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration(); 

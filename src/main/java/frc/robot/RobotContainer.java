@@ -101,29 +101,35 @@ public class RobotContainer {
 
         //OPERATPOR JOYSTICK BINDINGS
         intake.setDefaultCommand(intake.run(()->intake.manualControl(
-            OperatorJoystick.leftBumper(),  
-            OperatorJoystick.rightBumper(),
-            OperatorJoystick.leftTrigger(), 
-            100)));
+            OperatorJoystick.leftBumper(),  //up
+            OperatorJoystick.rightBumper(), //down
+            OperatorJoystick.leftTrigger(),  //intake
+            100))); //velocity
         
         indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
-            OperatorJoystick.rightTrigger(), 
-            100)));
+            OperatorJoystick.rightTrigger(), //index
+            100))); //speed
 
-        turret.setDefaultCommand(turret.run(()->turret.manualControl(
-            (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15),
-            MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1),
-            OperatorJoystick.x(),
-            50,
-            OperatorJoystick.rightTrigger(), 
-            100,
-            70)));
+        // turret.setDefaultCommand(turret.run(()->turret.manualControl(
+        //     (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15), //rotate
+        //     MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1), // speed
+        //     OperatorJoystick.a(), //rotatetopos
+        //     0.25, //position
+        //     OperatorJoystick.rightTrigger(), //shoot
+        //     100, //shoot velocity
+        //     70))); //funnel velocity
 
-        //SysId rootines for shooter
+        //SysId routines for shooter
         // OperatorJoystick.a().whileTrue(turret.sysIdQuasistaticForward());
         // OperatorJoystick.b().whileTrue(turret.sysIdQuasistaticReverse());
         // OperatorJoystick.x().whileTrue(turret.sysIdDynamicForward());
         // OperatorJoystick.y().whileTrue(turret.sysIdDynamicReverse());
+
+        //SysId routines for Funnel
+        OperatorJoystick.a().whileTrue(turret.sysIdFunnelQuasistaticForward());
+        OperatorJoystick.b().whileTrue(turret.sysIdFunnelQuasistaticReverse());
+        OperatorJoystick.x().whileTrue(turret.sysIdFunnelDynamicForward());
+        OperatorJoystick.y().whileTrue(turret.sysIdFunnelDynamicReverse());
     }
 
     public Command getAutonomousCommand() {

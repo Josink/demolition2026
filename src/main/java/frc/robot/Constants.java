@@ -19,9 +19,9 @@ public class Constants {
         public static final double ReverseSoftLimitThreshold = -0.53; //no more than one half rotation either way
 
         //slot 0 PID values TURRET MOTOR
-        public static final double kP = 0.3;
-        public static final double kI = 0.25;
-        public static final double kD = 0.2;
+        public static final double kP = 40;
+        public static final double kI = 10;
+        public static final double kD = 15;
         public static final double kv = 0.0;
         public static final double ks = 0.1;
         public static final double ka = 0.0;

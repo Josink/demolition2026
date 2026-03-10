@@ -32,12 +32,20 @@ public class Constants {
         public static final int MotionMagicJerk = 1000;
 
         //slot 0 PID values SHOOTER MOTORS
-        public static final double SkP = 3.8;
-        public static final double SkI = 0.5;
+        public static final double SkP = 0.0034343;
+        public static final double SkI = 0.05;
         public static final double SkD = 0.0;
-        public static final double Skv = 1;
-        public static final double Sks = 0.0;
-        public static final double Ska = 1;
+        public static final double Skv = 0.12471;
+        public static final double Sks = 0.22849;
+        public static final double Ska = 0.010388;
+
+        //slot 0 PID values FUNNEL MOTOR
+        public static final double FkP = 0.17867;
+        public static final double FkI = 0.05;
+        public static final double FkD = 0.0;
+        public static final double Fkv = 0.12169;
+        public static final double Fks = 0.1826;
+        public static final double Fka = 0.006896;
 
         //motion magic values
         public static final int SMotionMagicCruiseVelocity = 1500;
@@ -53,7 +61,7 @@ public class Constants {
         public static final int intakeMotorID = 60;
 
         //slot 0 PID values
-        public static final double kP = 0.3;
+        public static final double kP = 10;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kv = 0.0;

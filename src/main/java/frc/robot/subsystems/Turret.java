@@ -60,6 +60,7 @@ public class Turret extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Turret Position", getTurretPosition());
     SmartDashboard.putNumber("Shooter Velocity", rShootingMotor.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Funnel Velocity", funnelMotor.getVelocity().getValueAsDouble());
   }
 
   public double getTurretPosition(){
@@ -248,7 +249,24 @@ public class Turret extends SubsystemBase {
    
     lShootingMotor.getConfigurator().apply(talonconfigs);
     rShootingMotor.getConfigurator().apply(talonconfigs);
-    funnelMotor.getConfigurator().apply(talonconfigs);
+
+    TalonFXConfiguration ftalonconfigs = new TalonFXConfiguration(); 
+    
+    ftalonconfigs.Slot0.kP = Constants.turretConstants.FkP;
+    ftalonconfigs.Slot0.kI = Constants.turretConstants.FkI;
+    ftalonconfigs.Slot0.kD = Constants.turretConstants.FkD;
+    ftalonconfigs.Slot0.kV = Constants.turretConstants.Fkv;
+    ftalonconfigs.Slot0.kS = Constants.turretConstants.Fks;
+    ftalonconfigs.Slot0.kA = Constants.turretConstants.Fka;
+    
+    var fmotionMagicConfigs = ftalonconfigs.MotionMagic;
+    fmotionMagicConfigs.MotionMagicCruiseVelocity = Constants.turretConstants.SMotionMagicCruiseVelocity;
+    fmotionMagicConfigs.MotionMagicAcceleration = Constants.turretConstants.SMotionMagicAcceleration;
+    fmotionMagicConfigs.MotionMagicJerk = Constants.turretConstants.SMotionMagicJerk;
+
+    ftalonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+
+    funnelMotor.getConfigurator().apply(ftalonconfigs);
 
     MotorOutputConfigs rmotorOutputConfigs = new MotorOutputConfigs();
     rmotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;

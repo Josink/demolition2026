@@ -110,14 +110,14 @@ public class RobotContainer {
             OperatorJoystick.rightTrigger(), //index
             100))); //speed
 
-        // turret.setDefaultCommand(turret.run(()->turret.manualControl(
-        //     (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15), //rotate
-        //     MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1), // speed
-        //     OperatorJoystick.a(), //rotatetopos
-        //     0.25, //position
-        //     OperatorJoystick.rightTrigger(), //shoot
-        //     100, //shoot velocity
-        //     70))); //funnel velocity
+        turret.setDefaultCommand(turret.run(()->turret.manualControl(
+            (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15), //rotate
+            MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1), // speed
+            OperatorJoystick.a(), //rotatetopos
+            0.25, //position
+            OperatorJoystick.rightTrigger(), //shoot
+            100, //shoot velocity
+            70))); //funnel velocity
 
         //SysId routines for shooter
         // OperatorJoystick.a().whileTrue(turret.sysIdQuasistaticForward());
@@ -126,10 +126,10 @@ public class RobotContainer {
         // OperatorJoystick.y().whileTrue(turret.sysIdDynamicReverse());
 
         //SysId routines for Funnel
-        OperatorJoystick.a().whileTrue(turret.sysIdFunnelQuasistaticForward());
-        OperatorJoystick.b().whileTrue(turret.sysIdFunnelQuasistaticReverse());
-        OperatorJoystick.x().whileTrue(turret.sysIdFunnelDynamicForward());
-        OperatorJoystick.y().whileTrue(turret.sysIdFunnelDynamicReverse());
+        // OperatorJoystick.a().whileTrue(turret.sysIdFunnelQuasistaticForward());
+        // OperatorJoystick.b().whileTrue(turret.sysIdFunnelQuasistaticReverse());
+        // OperatorJoystick.x().whileTrue(turret.sysIdFunnelDynamicForward());
+        // OperatorJoystick.y().whileTrue(turret.sysIdFunnelDynamicReverse());
     }
 
     public Command getAutonomousCommand() {

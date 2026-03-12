@@ -17,7 +17,7 @@ public class ManualShoot extends Command {
   private final Turret turret = new Turret();
   private final Intake intake = new Intake();
 
-  private final BooleanSupplier shootButton; // Replace with actual button input
+  private final BooleanSupplier shootButton;
 
   public ManualShoot(BooleanSupplier shootButton) {
     this.shootButton = shootButton;

@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Indexer;
 
 public class ManualShoot extends Command {
   /** Creates a new ManualShoot. */
   private final Indexer indexer = new Indexer();
   private final Turret turret = new Turret();
+  private final Indexer indexer = new Indexer();
   private final Intake intake = new Intake();
 
   private final BooleanSupplier shootButton;
@@ -24,11 +26,12 @@ public class ManualShoot extends Command {
   private final double intakeVelocity;
   private final double tolerance;
   
-  public ManualShoot(BooleanSupplier shootButton, double degrees, double shootVelocity, double funnelVelocity, double intakeVelocity, double tolerance) {
+  public ManualShoot(BooleanSupplier shootButton, double degrees, double shootVelocity, double funnelVelocity, double indexerVelocity, double intakeVelocity, double tolerance) {
     this.shootButton = shootButton;
     this.degrees = degrees;
     this.shootVelocity = shootVelocity;
     this.funnelVelocity = funnelVelocity;
+    this.indexerVelocity = indexerVelocity;
     this.intakeVelocity = intakeVelocity;
     this.tolerance = tolerance;
     
@@ -51,7 +54,8 @@ public class ManualShoot extends Command {
       turret.rotateFunnelToVelocity(funnelVelocity);
 
       if(turret.shooterAtVelocity(shootVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
-        indexer.rotateToVelocity(intakeVelocity);
+        indexer.rotateToVelocity(indexerVelocity);
+        intake.rotateToVelocity(intakeVelocity);
       }
     }
   }

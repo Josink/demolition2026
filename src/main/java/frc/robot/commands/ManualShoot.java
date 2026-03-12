@@ -16,7 +16,6 @@ public class ManualShoot extends Command {
   /** Creates a new ManualShoot. */
   private final Indexer indexer = new Indexer();
   private final Turret turret = new Turret();
-  private final Indexer indexer = new Indexer();
   private final Intake intake = new Intake();
 
   private final BooleanSupplier shootButton;

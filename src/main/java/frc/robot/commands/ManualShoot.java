@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -15,7 +17,10 @@ public class ManualShoot extends Command {
   private final Turret turret = new Turret();
   private final Intake intake = new Intake();
 
-  public ManualShoot() {
+  private final BooleanSupplier shootButton; // Replace with actual button input
+
+  public ManualShoot(BooleanSupplier shootButton) {
+    this.shootButton = shootButton;
     addRequirements(indexer, turret, intake);
   }
 
@@ -28,13 +33,15 @@ public class ManualShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.setTurretAngleDegrees(180);
+    if (shootButton.getAsBoolean()) {
+      turret.setTurretAngleDegrees(180);
 
-    turret.rotateToVelocity(100);
-    turret.rotateFunnelToVelocity(70);
+      turret.rotateToVelocity(100);
+      turret.rotateFunnelToVelocity(70);
 
-    if(turret.shooterAtVelocity(100, 0.5) && turret.funnelAtVelocity(70, 0.5)){
-      indexer.rotateToVelocity(-100);
+      if(turret.shooterAtVelocity(100, 0.5) && turret.funnelAtVelocity(70, 0.5)){
+        indexer.rotateToVelocity(-100);
+      }
     }
   }
 

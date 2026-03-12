@@ -18,9 +18,20 @@ public class ManualShoot extends Command {
   private final Intake intake = new Intake();
 
   private final BooleanSupplier shootButton;
-
-  public ManualShoot(BooleanSupplier shootButton) {
+  private final double degrees;
+  private final double shootVelocity;
+  private final double funnelVelocity;
+  private final double intakeVelocity;
+  private final double tolerance;
+  
+  public ManualShoot(BooleanSupplier shootButton, double degrees, double shootVelocity, double funnelVelocity, double intakeVelocity, double tolerance) {
     this.shootButton = shootButton;
+    this.degrees = degrees;
+    this.shootVelocity = shootVelocity;
+    this.funnelVelocity = funnelVelocity;
+    this.intakeVelocity = intakeVelocity;
+    this.tolerance = tolerance;
+    
     addRequirements(indexer, turret, intake);
   }
 
@@ -34,13 +45,13 @@ public class ManualShoot extends Command {
   @Override
   public void execute() {
     if (shootButton.getAsBoolean()) {
-      turret.setTurretAngleDegrees(180);
+      turret.setTurretAngleDegrees(degrees);
 
-      turret.rotateToVelocity(100);
-      turret.rotateFunnelToVelocity(70);
+      turret.rotateToVelocity(shootVelocity);
+      turret.rotateFunnelToVelocity(funnelVelocity);
 
-      if(turret.shooterAtVelocity(100, 0.5) && turret.funnelAtVelocity(70, 0.5)){
-        indexer.rotateToVelocity(-100);
+      if(turret.shooterAtVelocity(shootVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
+        indexer.rotateToVelocity(intakeVelocity);
       }
     }
   }

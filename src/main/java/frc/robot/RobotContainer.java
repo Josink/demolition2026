@@ -106,7 +106,7 @@ public class RobotContainer {
                             100, //shoot speed
                             70, //funnel speed
                             50, //index speed
-                            100, //intake speed
+                            -30, //intake speed
                             0.5 //pid tolerance
             )
         );

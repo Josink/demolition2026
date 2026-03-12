@@ -106,9 +106,9 @@ public class RobotContainer {
             OperatorJoystick.leftTrigger(),  //intake
             100))); //velocity
         
-        indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
-            OperatorJoystick.rightTrigger(), //index
-            100))); //speed
+        // indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
+        //     OperatorJoystick.rightTrigger(), //index
+        //     100))); //speed
 
         // turret.setDefaultCommand(turret.run(()->turret.manualControl(
         //     (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15), //rotate
@@ -119,7 +119,9 @@ public class RobotContainer {
         //     100, //shoot velocity
         //     70))); //funnel velocity
         
-        OperatorJoystick.rightTrigger()
+        turret.setDefaultCommand(
+            new ManualShoot(OperatorJoystick.rightTrigger())
+        );
 
         //SysId routines for shooter
         // OperatorJoystick.a().whileTrue(turret.sysIdQuasistaticForward());

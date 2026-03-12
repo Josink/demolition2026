@@ -114,6 +114,14 @@ public class Turret extends SubsystemBase {
     funnelMotor.setControl(request);
   }
 
+  public boolean shooterAtVelocity(double velocity, double tolerance){
+    return Math.abs(rShootingMotor.getVelocity().getValueAsDouble() - velocity) < tolerance;
+  }
+
+  public boolean funnelAtVelocity(double velocity, double tolerance){
+    return Math.abs(funnelMotor.getVelocity().getValueAsDouble() - velocity) < tolerance;
+  }
+
   public void manualControl(boolean rotate, double tVelocity, BooleanSupplier toPos, double pos,  BooleanSupplier toShoot, double sVelocity, double fVelocity){
    if (rotate){
       rotateTurret(tVelocity);

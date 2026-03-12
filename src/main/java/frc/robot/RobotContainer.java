@@ -100,6 +100,17 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
+        turret.setDefaultCommand(
+            new ManualShoot(OperatorJoystick.rightTrigger(),
+                            180, //turret degrees
+                            100, //shoot speed
+                            70, //funnel speed
+                            50, //index speed
+                            100, //intake speed
+                            0.5 //pid tolerance
+            )
+        );
+        
         intake.setDefaultCommand(intake.run(()->intake.manualControl(
             OperatorJoystick.leftBumper(),  //up
             OperatorJoystick.rightBumper(), //down
@@ -118,10 +129,6 @@ public class RobotContainer {
         //     OperatorJoystick.rightTrigger(), //shoot
         //     100, //shoot velocity
         //     70))); //funnel velocity
-        
-        turret.setDefaultCommand(
-            new ManualShoot(OperatorJoystick.rightTrigger())
-        );
 
         //SysId routines for shooter
         // OperatorJoystick.a().whileTrue(turret.sysIdQuasistaticForward());

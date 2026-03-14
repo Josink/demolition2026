@@ -86,10 +86,10 @@ public class RobotContainer {
             forwardStraight.withVelocityX(-3).withVelocityY(0))
         );
         DriverJoystick.povRight().whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityY(3).withVelocityX(0))
+            forwardStraight.withVelocityY(-3).withVelocityX(0))
         );
         DriverJoystick.povLeft().whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityY(-3).withVelocityX(0))
+            forwardStraight.withVelocityY(3).withVelocityX(0))
         );
 
         // Run SysId routines when holding back/start and X/Y.

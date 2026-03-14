@@ -70,7 +70,77 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             state -> SignalLogger.writeString("SysIdTranslation_State", state.toString())
         ),
         new SysIdRoutine.Mechanism(
-            output -> setControl(m_translationCharacterization.withVolts(output)),
+            output -> {
+                // Apply the voltage to all modules
+                setControl(m_translationCharacterization.withVolts(output));
+                
+                // First pass: collect all data and calculate mean
+                double[] voltages = new double[4];
+                double[] velocities = new double[4];
+                double[] positions = new double[4];
+                
+                double totalVelocity = 0;
+                
+                for (int i = 0; i < 4; i++) {
+                    var module = getModule(i);
+                    voltages[i] = module.getDriveMotor().getMotorVoltage().getValueAsDouble();
+                    velocities[i] = module.getDriveMotor().getVelocity().getValueAsDouble();
+                    positions[i] = module.getDriveMotor().getPosition().getValueAsDouble();
+                    
+                    totalVelocity += velocities[i];
+                }
+                
+                // Calculate mean velocity
+                double meanVelocity = totalVelocity / 4;
+                
+                // Calculate standard deviation for velocity (to detect outliers)
+                double variance = 0;
+                for (int i = 0; i < 4; i++) {
+                    double dev = velocities[i] - meanVelocity;
+                    variance += dev * dev;
+                }
+                double stdDev = Math.sqrt(variance / 4);
+                
+                // Second pass: average only modules within 1 standard deviation of the mean
+                double sumVoltage = 0;
+                double sumVelocity = 0;
+                double sumPosition = 0;
+                int validModules = 0;
+                
+                for (int i = 0; i < 4; i++) {
+                    // Include module if its velocity is within 1 standard deviation of the mean
+                    if (Math.abs(velocities[i] - meanVelocity) <= stdDev) {
+                        sumVoltage += voltages[i];
+                        sumVelocity += velocities[i];
+                        sumPosition += positions[i];
+                        validModules++;
+                    }
+                }
+                
+                // Calculate robust averages (if all modules are outliers, fall back to regular mean)
+                double avgVoltage = validModules > 0 ? sumVoltage / validModules : (voltages[0] + voltages[1] + voltages[2] + voltages[3]) / 4;
+                double avgVelocity = validModules > 0 ? sumVelocity / validModules : meanVelocity;
+                double avgPosition = validModules > 0 ? sumPosition / validModules : (positions[0] + positions[1] + positions[2] + positions[3]) / 4;
+                
+                // Log the robust averages - these are what SysId will use
+                SignalLogger.writeDouble("voltage", avgVoltage);
+                SignalLogger.writeDouble("velocity", avgVelocity);
+                SignalLogger.writeDouble("position", avgPosition);
+                
+                // Also log which modules were included in the average (useful for debugging)
+                SignalLogger.writeDouble("valid_modules_count", validModules);
+                
+                // Optional: still log individual modules for debugging
+                for (int i = 0; i < 4; i++) {
+                    String moduleName = "drive_" + i;
+                    SignalLogger.writeDouble(moduleName + "_voltage", voltages[i]);
+                    SignalLogger.writeDouble(moduleName + "_velocity", velocities[i]);
+                    SignalLogger.writeDouble(moduleName + "_position", positions[i]);
+                }
+                
+                // Optional: also log the commanded voltage for reference
+                SignalLogger.writeDouble("commanded_voltage", output.in(Volts));
+            },
             null,
             this
         )
@@ -86,7 +156,80 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             state -> SignalLogger.writeString("SysIdSteer_State", state.toString())
         ),
         new SysIdRoutine.Mechanism(
-            volts -> setControl(m_steerCharacterization.withVolts(volts)),
+            volts -> {
+                // Apply the voltage to steer motors
+                setControl(m_steerCharacterization.withVolts(volts));
+                
+                // First pass: collect all data and calculate mean angular velocity
+                double[] voltages = new double[4];
+                double[] angularVelocities = new double[4];
+                double[] angularPositions = new double[4];
+                
+                double totalAngularVelocity = 0;
+                
+                for (int i = 0; i < 4; i++) {
+                    var module = getModule(i);
+                    // For steer motors, we want angular measurements
+                    voltages[i] = module.getSteerMotor().getMotorVoltage().getValueAsDouble();
+                    angularVelocities[i] = module.getSteerMotor().getVelocity().getValueAsDouble(); // This is angular velocity
+                    angularPositions[i] = module.getSteerMotor().getPosition().getValueAsDouble(); // This is angular position
+                    
+                    totalAngularVelocity += angularVelocities[i];
+                }
+                
+                // Calculate mean angular velocity
+                double meanAngularVelocity = totalAngularVelocity / 4;
+                
+                // Calculate standard deviation for angular velocity (to detect outliers)
+                double variance = 0;
+                for (int i = 0; i < 4; i++) {
+                    double dev = angularVelocities[i] - meanAngularVelocity;
+                    variance += dev * dev;
+                }
+                double stdDev = Math.sqrt(variance / 4);
+                
+                // Second pass: average only modules within 1 standard deviation of the mean
+                double sumVoltage = 0;
+                double sumAngularVelocity = 0;
+                double sumAngularPosition = 0;
+                int validModules = 0;
+                
+                for (int i = 0; i < 4; i++) {
+                    // Include module if its angular velocity is within 1 standard deviation of the mean
+                    if (Math.abs(angularVelocities[i] - meanAngularVelocity) <= stdDev) {
+                        sumVoltage += voltages[i];
+                        sumAngularVelocity += angularVelocities[i];
+                        sumAngularPosition += angularPositions[i];
+                        validModules++;
+                    }
+                }
+                
+                // Calculate robust averages (if all modules are outliers, fall back to regular mean)
+                double avgVoltage = validModules > 0 ? sumVoltage / validModules : 
+                    (voltages[0] + voltages[1] + voltages[2] + voltages[3]) / 4;
+                double avgAngularVelocity = validModules > 0 ? sumAngularVelocity / validModules : meanAngularVelocity;
+                double avgAngularPosition = validModules > 0 ? sumAngularPosition / validModules : 
+                    (angularPositions[0] + angularPositions[1] + angularPositions[2] + angularPositions[3]) / 4;
+                
+                // Log the robust averages - these are what SysId will use for steer analysis
+                SignalLogger.writeDouble("steer_voltage", avgVoltage);
+                SignalLogger.writeDouble("steer_velocity", avgAngularVelocity); // Angular velocity in rotations per second
+                SignalLogger.writeDouble("steer_position", avgAngularPosition); // Angular position in rotations
+                
+                // Also log which modules were included in the average (useful for debugging)
+                SignalLogger.writeDouble("steer_valid_modules_count", validModules);
+                
+                // Optional: still log individual modules for debugging
+                for (int i = 0; i < 4; i++) {
+                    String moduleName = "steer_" + i;
+                    SignalLogger.writeDouble(moduleName + "_voltage", voltages[i]);
+                    SignalLogger.writeDouble(moduleName + "_angular_velocity", angularVelocities[i]);
+                    SignalLogger.writeDouble(moduleName + "_angular_position", angularPositions[i]);
+                }
+                
+                // Optional: also log the commanded voltage for reference
+                SignalLogger.writeDouble("steer_commanded_voltage", volts.in(Volts));
+            },
             null,
             this
         )
@@ -120,7 +263,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     );
 
     /* The SysId routine to test */
-    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
+    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineSteer;
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -347,5 +490,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+    public Pose2d getPose(){
+        return this.getState().Pose;
     }
 }

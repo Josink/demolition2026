@@ -11,7 +11,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -19,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.ManualShoot;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -44,7 +44,7 @@ public class RobotContainer {
     public final Intake intake = new Intake();
     public final Indexer indexer = new Indexer();
 
-    //public final Vision vision = new Vision(drivetrain);
+    public final Vision vision = new Vision(drivetrain);
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -80,18 +80,24 @@ public class RobotContainer {
         ));
 
         DriverJoystick.povUp().whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityX(0.5).withVelocityY(0))
+            forwardStraight.withVelocityX(3).withVelocityY(0))
         );
         DriverJoystick.povDown().whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityX(-0.5).withVelocityY(0))
+            forwardStraight.withVelocityX(-3).withVelocityY(0))
+        );
+        DriverJoystick.povRight().whileTrue(drivetrain.applyRequest(() ->
+            forwardStraight.withVelocityY(3).withVelocityX(0))
+        );
+        DriverJoystick.povLeft().whileTrue(drivetrain.applyRequest(() ->
+            forwardStraight.withVelocityY(-3).withVelocityX(0))
         );
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        DriverJoystick.back().and(DriverJoystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        DriverJoystick.back().and(DriverJoystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        DriverJoystick.start().and(DriverJoystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        DriverJoystick.start().and(DriverJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        DriverJoystick.x().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        DriverJoystick.y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        DriverJoystick.a().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        DriverJoystick.b().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
 
         // Reset the field-centric heading on left bumper press.
         DriverJoystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
@@ -101,21 +107,19 @@ public class RobotContainer {
 
         //OPERATPOR JOYSTICK BINDINGS
         turret.setDefaultCommand(
-            new ManualShoot(OperatorJoystick.rightTrigger(),
-                            180, //turret degrees
-                            100, //shoot speed
-                            70, //funnel speed
-                            50, //index speed
-                            -30, //intake speed
-                            0.5 //pid tolerance
+            new ManualShoot(
+                indexer, 
+                turret, 
+                intake,
+                OperatorJoystick,
+                180, //turret degrees
+                80, //shoot speed
+                70, //funnel speed
+                50, //index speed
+                -30, //intake speed
+                5 //pid tolerance
             )
         );
-        
-        intake.setDefaultCommand(intake.run(()->intake.manualControl(
-            OperatorJoystick.leftBumper(),  //up
-            OperatorJoystick.rightBumper(), //down
-            OperatorJoystick.leftTrigger(),  //intake
-            100))); //velocity
         
         // indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
         //     OperatorJoystick.rightTrigger(), //index

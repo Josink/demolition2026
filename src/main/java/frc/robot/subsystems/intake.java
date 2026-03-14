@@ -42,6 +42,22 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(speed);
   }
 
+  public void stopIntake(){
+    intakeMotor.set(0);
+  }
+
+  public void up(){
+    intakeSolenoid.set(DoubleSolenoid.Value.kForward);
+  }
+
+  public void down(){
+    intakeSolenoid.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  public void off(){
+    intakeSolenoid.set(DoubleSolenoid.Value.kOff);
+  }
+
   public void setIntakeSolenoid(boolean down, boolean up){
     if(down){
       intakeSolenoid.set(DoubleSolenoid.Value.kForward);
@@ -57,15 +73,8 @@ public class Intake extends SubsystemBase {
     intakeMotor.setControl(request);
   }
 
-  public void manualControl(BooleanSupplier down, BooleanSupplier up, BooleanSupplier intake, double velocity){
+  public void manualControl(BooleanSupplier down, BooleanSupplier up){
     setIntakeSolenoid(down.getAsBoolean(), up.getAsBoolean());
-
-    if (intake.getAsBoolean()){
-      rotateToVelocity(velocity);
-    } else {
-      suck(0);
-    }
-
   }
 
   private void applyIntakeMotorConfigs(){

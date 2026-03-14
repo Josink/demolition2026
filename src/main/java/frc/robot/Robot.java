@@ -4,22 +4,18 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.HootAutoReplay;
+import com.ctre.phoenix6.SignalLogger;
 
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
-
     private final RobotContainer m_robotContainer;
 
-    /* log and replay timestamp and joystick data */
-    private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
-        .withTimestampReplay()
-        .withJoystickReplay();
+    // Track if we're in SysId test mode
+    private boolean m_sysIdMode = false;
 
     public Robot() {
         m_robotContainer = new RobotContainer();
@@ -27,12 +23,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        DataLogManager.start();
+        SignalLogger.setPath("/home/lvuser/logs/");
     }
 
     @Override
     public void robotPeriodic() {
-        m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
     }
 
@@ -65,6 +60,11 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
+
+        if (m_sysIdMode) {
+            SignalLogger.stop();
+            m_sysIdMode = false;
+        }
     }
 
     @Override
@@ -76,13 +76,24 @@ public class Robot extends TimedRobot {
     @Override
     public void testInit() {
         CommandScheduler.getInstance().cancelAll();
+
+        // In test mode, start logging automatically
+        SignalLogger.start();
+        m_sysIdMode = true;
+        System.out.println("SignalLogger started for SysId tests");
     }
 
     @Override
     public void testPeriodic() {}
 
     @Override
-    public void testExit() {}
+    public void testExit() {
+        if (m_sysIdMode) {
+            SignalLogger.stop();
+            m_sysIdMode = false;
+            System.out.println("SignalLogger stopped");
+        }
+    }
 
     @Override
     public void simulationPeriodic() {}

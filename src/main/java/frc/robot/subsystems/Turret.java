@@ -63,6 +63,14 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putNumber("Funnel Velocity", funnelMotor.getVelocity().getValueAsDouble());
   }
 
+  public double getShooterVelocity(){
+    return rShootingMotor.getVelocity().getValueAsDouble();
+  }
+
+  public double getFunnelVelocity(){
+    return funnelMotor.getVelocity().getValueAsDouble();
+  }
+
   public double getTurretPosition(){
     return turretMotor.getPosition().getValueAsDouble();
   }

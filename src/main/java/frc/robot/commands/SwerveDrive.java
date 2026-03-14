@@ -78,6 +78,9 @@ public class SwerveDrive extends Command {
         .withRotationalRate(slewR.calculate(rotationVal * MaxAngularRate));
 
         swerve.setControl(m_Request);
+
+        double currentSpeed = swerve.getState().Speeds.vxMetersPerSecond;
+        SmartDashboard.putNumber("Current Speed", currentSpeed);
     }
 
     @Override

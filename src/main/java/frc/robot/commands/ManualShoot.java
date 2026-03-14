@@ -4,29 +4,33 @@
 
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.Indexer;
 
 public class ManualShoot extends Command {
   /** Creates a new ManualShoot. */
-  private final Indexer indexer = new Indexer();
-  private final Turret turret = new Turret();
-  private final Intake intake = new Intake();
+  private final Indexer indexer;
+  private final Turret turret;
+  private final Intake intake;
 
-  private final BooleanSupplier shootButton;
+  private final CommandXboxController operatorJoystick;
   private final double degrees;
   private final double shootVelocity;
   private final double funnelVelocity;
   private final double intakeVelocity;
+  private final double indexerVelocity;
   private final double tolerance;
   
-  public ManualShoot(BooleanSupplier shootButton, double degrees, double shootVelocity, double funnelVelocity, double indexerVelocity, double intakeVelocity, double tolerance) {
-    this.shootButton = shootButton;
+  public ManualShoot(Indexer indexer, Turret turret, Intake intake, CommandXboxController operatorJoystick, double degrees, double shootVelocity, double funnelVelocity, double indexerVelocity, double intakeVelocity, double tolerance) {
+    this.indexer = indexer;
+    this.turret = turret;
+    this.intake = intake;
+    
+    this.operatorJoystick = operatorJoystick;
     this.degrees = degrees;
     this.shootVelocity = shootVelocity;
     this.funnelVelocity = funnelVelocity;
@@ -40,14 +44,17 @@ public class ManualShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.setIntakeSolenoid(true, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shootButton.getAsBoolean()) {
-      turret.setTurretAngleDegrees(degrees);
+    SmartDashboard.putNumber("Shooter Velocity", turret.getShooterVelocity());
+    SmartDashboard.putNumber("Funnel Velocity", turret.getFunnelVelocity());
+    SmartDashboard.putNumber("Turret Position", turret.getTurretPosition());
+
+    if (operatorJoystick.rightTrigger().getAsBoolean()) {
+      //turret.setTurretAngleDegrees(degrees);
 
       turret.rotateToVelocity(shootVelocity);
       turret.rotateFunnelToVelocity(funnelVelocity);
@@ -56,6 +63,25 @@ public class ManualShoot extends Command {
         indexer.rotateToVelocity(indexerVelocity);
         intake.rotateToVelocity(intakeVelocity);
       }
+    } else{
+      turret.stopShooter(0);
+      turret.stopFunnel(0);
+      intake.stopIntake();
+      indexer.stopIndexer();
+    }
+
+    if(operatorJoystick.leftBumper().getAsBoolean()){
+      intake.down();
+    } else if (operatorJoystick.rightBumper().getAsBoolean()){
+      intake.up();
+    } else{
+      intake.off();
+    }
+
+    if (operatorJoystick.leftTrigger().getAsBoolean()){
+      intake.rotateToVelocity(-intakeVelocity);
+    } else {
+      intake.stopIntake();
     }
   }
 
@@ -64,6 +90,6 @@ public class ManualShoot extends Command {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return operatorJoystick.rightTrigger().getAsBoolean() == false;
   }
 }

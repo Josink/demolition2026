@@ -34,6 +34,10 @@ public class Indexer extends SubsystemBase {
     indexerMotor.set(speed);
   }
 
+  public void stopIndexer(){
+    indexerMotor.set(0);
+  }
+  
   public void rotateToVelocity(double velocity){
     final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
     indexerMotor.setControl(request);

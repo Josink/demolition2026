@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.PoseEstimate;
@@ -14,9 +18,11 @@ import frc.robot.LimelightHelpers.PoseEstimate;
 public class Vision extends SubsystemBase {
   private final CommandSwerveDrivetrain drivetrain;
 
-  private static final String LL_FRONT = "limelight-front";  
+  //private static final String LL_FRONT = "limelight-front";  
   private static final String LL_LEFT  = "limelight-left";   
   private static final String LL_RIGHT = "limelight-right";
+
+  int[] validIDs = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
 
   public Vision(CommandSwerveDrivetrain drivetrain) {
     this.drivetrain = drivetrain;
@@ -24,7 +30,9 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    LimelightHelpers.SetRobotOrientation("limelight", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
     PoseEstimate estimate = getBestPoseEstimate();
+    
     if (!isValid(estimate)) return;
 
     if (Math.abs(drivetrain.getState().Speeds.omegaRadiansPerSecond) > 3.0)
@@ -43,14 +51,23 @@ public class Vision extends SubsystemBase {
 
   public PoseEstimate getBestPoseEstimate() {
 
-    PoseEstimate front = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LL_FRONT);
-    PoseEstimate left  = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LL_LEFT);
-    PoseEstimate right = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LL_RIGHT);
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+
+    PoseEstimate left;
+    PoseEstimate right;
+
+    if(alliance.isPresent() && alliance.get() == Alliance.Blue) {
+      left  = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LL_LEFT);
+      right = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LL_RIGHT);
+    } else {
+      left  = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(LL_LEFT);
+      right = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(LL_RIGHT);
+
+    }
 
     // Pick the camera with most tags
     PoseEstimate best = null;
 
-    if (isValid(front)) best = front;
     if (isValid(left)  && (best == null || left.tagCount  > best.tagCount)) best = left;
     if (isValid(right) && (best == null || right.tagCount > best.tagCount)) best = right;
 

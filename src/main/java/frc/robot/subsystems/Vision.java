@@ -12,6 +12,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.PoseEstimate;
 
@@ -26,11 +27,15 @@ public class Vision extends SubsystemBase {
 
   public Vision(CommandSwerveDrivetrain drivetrain) {
     this.drivetrain = drivetrain;
+    LimelightHelpers.SetFiducialIDFiltersOverride("limelight-left", validIDs);
+    LimelightHelpers.SetFiducialIDFiltersOverride("limelight-right", validIDs);
   }
 
   @Override
   public void periodic() {
-    LimelightHelpers.SetRobotOrientation("limelight", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.SetRobotOrientation("limelight-left", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation("limelight-rigt", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        
     PoseEstimate estimate = getBestPoseEstimate();
     
     if (!isValid(estimate)) return;
@@ -55,14 +60,17 @@ public class Vision extends SubsystemBase {
 
     PoseEstimate left;
     PoseEstimate right;
+    
+    Pose2d hubAprilTag;
 
     if(alliance.isPresent() && alliance.get() == Alliance.Blue) {
       left  = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LL_LEFT);
       right = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LL_RIGHT);
+      hubAprilTag = Constants.fieldConstants.aprilTagIDToPose(10);
     } else {
       left  = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(LL_LEFT);
       right = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(LL_RIGHT);
-
+      hubAprilTag = Constants.fieldConstants.aprilTagIDToPose(26);
     }
 
     // Pick the camera with most tags

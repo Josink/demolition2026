@@ -32,17 +32,17 @@ public class Constants {
         public static final int MotionMagicJerk = 1000;
 
         //slot 0 PID values SHOOTER MOTORS
-        public static final double SkP = 0.17399;
+        public static final double SkP = 0.47399;
         public static final double SkI = 0.23;
-        public static final double SkD = 0.25;
+        public static final double SkD = 0.15;
         public static final double Skv = 0.12018;
         public static final double Sks = 0.23694;
         public static final double Ska = 0.0052615;
 
         //slot 0 PID values FUNNEL MOTOR
-        public static final double FkP = 0.17867;
+        public static final double FkP = 0.47867;
         public static final double FkI = 0.23;
-        public static final double FkD = 0.25;
+        public static final double FkD = 0.15;
         public static final double Fkv = 0.12169;
         public static final double Fks = 0.1826;
         public static final double Fka = 0.006896;

@@ -113,11 +113,11 @@ public class RobotContainer {
                 intake,
                 OperatorJoystick,
                 180, //turret degrees
-                80, //shoot speed
+                85, //shoot speed
                 70, //funnel speed
-                50, //index speed
+                70, //index speed
                 -30, //intake speed
-                5 //pid tolerance
+                2 //pid tolerance
             )
         );
         

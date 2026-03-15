@@ -40,9 +40,9 @@ public class SwerveDrive extends Command {
         this.driverController = driver;
         addRequirements(swerve);
 
-        slewR = new SlewRateLimiter(MaxSpeed*0.85);
-        slewX = new SlewRateLimiter(MaxSpeed*0.85);
-        slewY = new SlewRateLimiter(MaxSpeed*0.85);
+        slewR = new SlewRateLimiter(MaxSpeed*0.90);
+        slewX = new SlewRateLimiter(MaxSpeed*0.90);
+        slewY = new SlewRateLimiter(MaxSpeed*0.90);
 
         m_speedChooser = new SendableChooser<Double>();
         m_speedChooser.addOption("100%", 1.0);
@@ -65,7 +65,8 @@ public class SwerveDrive extends Command {
     }
 
     @Override
-    public void execute(){        
+    public void execute(){
+        //check if the deadbands need to change        
         xVal = MathUtil.applyDeadband(-driverController.getLeftX() * m_speedChooser.getSelected(),0.2);
         yVal = MathUtil.applyDeadband(-driverController.getLeftY() * m_speedChooser.getSelected(), 0.2);
         rotationVal = MathUtil.applyDeadband(-driverController.getRightX() * m_speedChooser.getSelected(), 0.1);

@@ -54,7 +54,7 @@ public class ManualShoot extends Command {
     SmartDashboard.putNumber("Turret Position", turret.getTurretPosition());
 
     if (operatorJoystick.rightTrigger().getAsBoolean()) {
-      //turret.setTurretAngleDegrees(degrees);
+      turret.setTurretAngleDegrees(degrees);
 
       turret.rotateToVelocity(shootVelocity);
       turret.rotateFunnelToVelocity(funnelVelocity);

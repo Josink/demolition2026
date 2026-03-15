@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutoPlay;
 import frc.robot.commands.ManualShoot;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.generated.TunerConstants;
@@ -49,9 +50,17 @@ public class RobotContainer {
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
+    private final SendableChooser<Command> turretControlMode;
+
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
+
+        turretControlMode = new SendableChooser<Command>();
+        turretControlMode.addOption("Manual Control", new ManualShoot(indexer, turret, intake, OperatorJoystick, 180, 85, 70, 70, -30, 2));
+        turretControlMode.addOption("Auto Control", new AutoPlay(indexer, turret, intake, vision, OperatorJoystick, 2, 70));
+        SmartDashboard.putData("Turret Control Mode", turretControlMode);
+
         configureBindings();
 
         // Warmup PathPlanner to avoid Java pauses
@@ -106,20 +115,7 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
-        turret.setDefaultCommand(
-            new ManualShoot(
-                indexer, 
-                turret, 
-                intake,
-                OperatorJoystick,
-                180, //turret degrees
-                85, //shoot speed
-                70, //funnel speed
-                70, //index speed
-                -30, //intake speed
-                2 //pid tolerance
-            )
-        );
+        turret.setDefaultCommand(turretControlMode.getSelected());
         
         // indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
         //     OperatorJoystick.rightTrigger(), //index

@@ -4,7 +4,10 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
@@ -17,13 +20,21 @@ public class AutoPlay extends Command {
   private final Turret turret;
   private final Intake intake;
   private final Vision vision;
+
+  private final CommandXboxController operatorJoystick;
+  private final double tolerance;
+  private final double indexerVelocity;
+
  
-  public AutoPlay(Indexer indexer, Turret turret, Intake intake, Vision vision) {
+  public AutoPlay(Indexer indexer, Turret turret, Intake intake, Vision vision, CommandXboxController operatorJoystick, double tolerance, double indexerVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.indexer = indexer;
     this.turret = turret;
     this.intake = intake;
     this.vision = vision;
+    this.operatorJoystick = operatorJoystick;
+    this.tolerance = tolerance;
+    this.indexerVelocity = indexerVelocity;
     
     addRequirements(indexer, turret, intake, vision);
   }
@@ -34,7 +45,31 @@ public class AutoPlay extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double turretAngle = vision.getAngleToHub().in(Degrees);
+    turret.setTurretAngleDegrees(turretAngle);
+
+    double maxShooterVelocity = 90;
+    double minShooterVelocity = 50; 
+
+    double shooterVelocity = (2 * minShooterVelocity + maxShooterVelocity);
+    double funnelVelocity = shooterVelocity * 0.8;
+
+    if(operatorJoystick.rightTrigger().getAsBoolean()) {
+      turret.rotateToVelocity(shooterVelocity);
+      turret.rotateFunnelToVelocity(funnelVelocity);
+
+      if(turret.shooterAtVelocity(shooterVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
+        indexer.rotateToVelocity(indexerVelocity);
+      }
+
+    } else {
+      turret.stopShooter(0);
+      turret.stopFunnel(0);
+      intake.stopIntake();
+      indexer.stopIndexer();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

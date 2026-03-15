@@ -4,11 +4,16 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Meters;
+
 import java.util.Optional;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,6 +29,8 @@ public class Vision extends SubsystemBase {
   private static final String LL_RIGHT = "limelight-right";
 
   int[] validIDs = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
+
+  Pose2d hubAprilTag;
 
   public Vision(CommandSwerveDrivetrain drivetrain) {
     this.drivetrain = drivetrain;
@@ -61,8 +68,6 @@ public class Vision extends SubsystemBase {
     PoseEstimate left;
     PoseEstimate right;
     
-    Pose2d hubAprilTag;
-
     if(alliance.isPresent() && alliance.get() == Alliance.Blue) {
       left  = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LL_LEFT);
       right = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LL_RIGHT);
@@ -94,5 +99,21 @@ public class Vision extends SubsystemBase {
   public Pose2d getRobotPose() {
     PoseEstimate est = getBestPoseEstimate();
     return est != null ? est.pose : null;
+  }
+
+  public Distance getDistanceToHub() {
+    PoseEstimate est = getBestPoseEstimate();
+    if (est == null) return null;
+
+    double distanceToHub = est.pose.getTranslation().getDistance(hubAprilTag.getTranslation());
+    return Meters.of(distanceToHub);
+  }
+
+  public Angle getAngleToHub() {
+    PoseEstimate est = getBestPoseEstimate();
+    if (est == null) return null;
+
+    double angleToHub = est.pose.getRotation().minus(hubAprilTag.getRotation()).getDegrees();
+    return Degree.of(angleToHub);
   }
 }

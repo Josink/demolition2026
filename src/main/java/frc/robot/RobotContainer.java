@@ -42,6 +42,13 @@ public class RobotContainer {
 
     public final SendableChooser<Command> turretControlMode;
 
+    private boolean isAutoMode = false;
+    private Command currentTurretCommand = null;
+
+    private Command manualCommand;
+    
+    private Command autoCommand;
+
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
@@ -54,6 +61,17 @@ public class RobotContainer {
             new ManualShoot(indexer, turret, intake, OperatorJoystick, vision, 180, 85, 70, 70, -30, 2)
         );
         SmartDashboard.putData("Turret Control Mode", turretControlMode);
+
+        manualCommand = new ManualShoot(
+            indexer, turret, intake, OperatorJoystick, vision,
+            180, 85, 70, 70, -30, 2
+        );
+
+        autoCommand = new AutoPlay(
+            indexer, turret, intake, vision, OperatorJoystick,
+            2, 70
+        );
+
 
         configureBindings();
 
@@ -78,6 +96,24 @@ public class RobotContainer {
             turret.stopShooter(0);
             turret.stopFunnel(0);
         }));
+
+        OperatorJoystick.a().onTrue(
+            turret.runOnce(() -> {
+                // Flip mode
+                isAutoMode = !isAutoMode;
+        
+                // Cancel current command if running
+                if (currentTurretCommand != null) {
+                    currentTurretCommand.cancel();
+                }
+        
+                // Pick new command
+                currentTurretCommand = isAutoMode ? autoCommand : manualCommand;
+        
+                // Schedule it
+                currentTurretCommand.schedule();
+            })
+        );
         
         // indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
         //     OperatorJoystick.rightTrigger(), //index

@@ -50,15 +50,19 @@ public class RobotContainer {
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
-    private final SendableChooser<Command> turretControlMode;
+    public final SendableChooser<Command> turretControlMode;
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         turretControlMode = new SendableChooser<Command>();
-        turretControlMode.addOption("Manual Control", new ManualShoot(indexer, turret, intake, OperatorJoystick, 180, 85, 70, 70, -30, 2));
+        turretControlMode.addOption("Manual Control", new ManualShoot(indexer, turret, intake, OperatorJoystick, vision, 180, 85, 70, 70, -30, 2));
         turretControlMode.addOption("Auto Control", new AutoPlay(indexer, turret, intake, vision, OperatorJoystick, 2, 70));
+        turretControlMode.setDefaultOption(
+            "Manual Control",
+            new ManualShoot(indexer, turret, intake, OperatorJoystick, vision, 180, 85, 70, 70, -30, 2)
+        );
         SmartDashboard.putData("Turret Control Mode", turretControlMode);
 
         configureBindings();

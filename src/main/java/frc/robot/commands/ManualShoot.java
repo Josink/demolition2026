@@ -4,18 +4,23 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Vision;
 
 public class ManualShoot extends Command {
   /** Creates a new ManualShoot. */
   private final Indexer indexer;
   private final Turret turret;
   private final Intake intake;
+  private final Vision vision;
 
   private final CommandXboxController operatorJoystick;
   private final double degrees;
@@ -25,10 +30,11 @@ public class ManualShoot extends Command {
   private final double indexerVelocity;
   private final double tolerance;
   
-  public ManualShoot(Indexer indexer, Turret turret, Intake intake, CommandXboxController operatorJoystick, double degrees, double shootVelocity, double funnelVelocity, double indexerVelocity, double intakeVelocity, double tolerance) {
+  public ManualShoot(Indexer indexer, Turret turret, Intake intake, CommandXboxController operatorJoystick, Vision vision, double degrees, double shootVelocity, double funnelVelocity, double indexerVelocity, double intakeVelocity, double tolerance) {
     this.indexer = indexer;
     this.turret = turret;
     this.intake = intake;
+    this.vision = vision;
     
     this.operatorJoystick = operatorJoystick;
     this.degrees = degrees;
@@ -52,6 +58,15 @@ public class ManualShoot extends Command {
     SmartDashboard.putNumber("Shooter Velocity", turret.getShooterVelocity());
     SmartDashboard.putNumber("Funnel Velocity", turret.getFunnelVelocity());
     SmartDashboard.putNumber("Turret Position", turret.getTurretPosition());
+
+    if (operatorJoystick.getLeftX() >= 0.15 || operatorJoystick.getLeftX() <= -0.15){
+      turret.rotateTurret(MathUtil.applyDeadband(operatorJoystick.getLeftX()*0.2, 0.1));
+    }
+
+    if(operatorJoystick.x().getAsBoolean()){
+        double turretAngle = vision.getAngleToHub().in(Degrees);
+        turret.setTurretAngleDegrees(turretAngle/2);
+    }
 
     if (operatorJoystick.rightTrigger().getAsBoolean()) {
       turret.setTurretAngleDegrees(degrees);

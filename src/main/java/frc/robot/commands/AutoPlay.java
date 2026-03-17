@@ -47,7 +47,7 @@ public class AutoPlay extends Command {
   @Override
   public void execute() {
     double turretAngle = vision.getAngleToHub().in(Degrees);
-    turret.setTurretAngleDegrees(turretAngle);
+    turret.setTurretAngleDegrees(turretAngle/2);
 
     double maxShooterVelocity = 90;
     double minShooterVelocity = 50; 

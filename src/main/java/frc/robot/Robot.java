@@ -61,6 +61,10 @@ public class Robot extends TimedRobot {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
 
+        if (m_robotContainer.turretControlMode.getSelected() != null) {
+            m_robotContainer.turretControlMode.getSelected().schedule();
+        }
+
         if (m_sysIdMode) {
             SignalLogger.stop();
             m_sysIdMode = false;

@@ -105,13 +105,6 @@ public class RobotContainer {
             forwardStraight.withVelocityY(3).withVelocityX(0))
         );
 
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        DriverJoystick.x().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        DriverJoystick.y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-        DriverJoystick.a().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        DriverJoystick.b().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-
         // Reset the field-centric heading on left bumper press.
         DriverJoystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
@@ -119,7 +112,11 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
-        turret.setDefaultCommand(turretControlMode.getSelected());
+        turret.setDefaultCommand(    
+            turret.run(() -> {
+            turret.stopShooter(0);
+            turret.stopFunnel(0);
+        }));
         
         // indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
         //     OperatorJoystick.rightTrigger(), //index
@@ -145,6 +142,12 @@ public class RobotContainer {
         // OperatorJoystick.b().whileTrue(turret.sysIdFunnelQuasistaticReverse());
         // OperatorJoystick.x().whileTrue(turret.sysIdFunnelDynamicForward());
         // OperatorJoystick.y().whileTrue(turret.sysIdFunnelDynamicReverse());
+
+        // Note that each routine should be run exactly once in a single log.
+        // DriverJoystick.x().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // DriverJoystick.y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // DriverJoystick.a().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // DriverJoystick.b().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
     }
 
     public Command getAutonomousCommand() {

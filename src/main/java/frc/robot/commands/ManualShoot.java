@@ -105,6 +105,6 @@ public class ManualShoot extends Command {
 
   @Override
   public boolean isFinished() {
-    return operatorJoystick.rightTrigger().getAsBoolean() == false;
+      return false;
   }
 }

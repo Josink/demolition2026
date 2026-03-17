@@ -26,8 +26,8 @@ public class SwerveDrive extends Command {
 
     private SwerveRequest m_Request;
     private SwerveRequest forward;
-    private SwerveRequest backword;
-    private ServeRequest left;
+    private SwerveRequest backward;
+    private SwerveRequest left;
     private SwerveRequest right;
 
     // Use open-loop control for drive motors
@@ -92,7 +92,7 @@ public class SwerveDrive extends Command {
 
         right = drive.withVelocityX(0)
         .withVelocityY(-MaxSpeed * m_speedChooser.getSelected())
-        .withRotationalRate
+        .withRotationalRate(0);
 
         left = drive.withVelocityX(0)
         .withVelocityY(MaxSpeed * m_speedChooser.getSelected())
@@ -100,13 +100,17 @@ public class SwerveDrive extends Command {
 
         swerve.setControl(m_Request);
 
-        driverController.povUp().whileTrue(swerve.setControl(forward));
-        driverController.povDown().whileTrue(swerve.setControl(backword));
-        driverController.povRight().whileTrue(swerve.setControl(right));
-        driverController.povLeft().whileTrue(swerve.setControl(left));
+        driverController.povUp().whileTrue(Drive(forward));
+        driverController.povDown().whileTrue(Drive(backward));
+        driverController.povRight().whileTrue(Drive(right));
+        driverController.povLeft().whileTrue(Drive(left));
 
         double currentSpeed = swerve.getState().Speeds.vxMetersPerSecond;
         SmartDashboard.putNumber("Current Speed", currentSpeed);
+    }
+
+    private Command Drive(SwerveRequest request) {
+        return swerve.run(() -> swerve.setControl(request));
     }
 
     @Override

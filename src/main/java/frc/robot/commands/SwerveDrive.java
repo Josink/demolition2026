@@ -25,6 +25,10 @@ public class SwerveDrive extends Command {
     private SendableChooser<Double> m_speedChooser;
 
     private SwerveRequest m_Request;
+    private SwerveRequest forward;
+    private SwerveRequest backword;
+    private ServeRequest left;
+    private SwerveRequest right;
 
     // Use open-loop control for drive motors
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
@@ -78,7 +82,28 @@ public class SwerveDrive extends Command {
         .withVelocityY(slewX.calculate(xVal * MaxSpeed))
         .withRotationalRate(slewR.calculate(rotationVal * MaxAngularRate));
 
+        forward = drive.withVelocityX(MaxSpeed * m_speedChooser.getSelected())
+        .withVelocityY(0)
+        .withRotationalRate(0);
+
+        backward = drive.withVelocityX(-MaxSpeed * m_speedChooser.getSelected())
+        .withVelocityY(0)
+        .withRotationalRate(0);
+
+        right = drive.withVelocityX(0)
+        .withVelocityY(-MaxSpeed * m_speedChooser.getSelected())
+        .withRotationalRate
+
+        left = drive.withVelocityX(0)
+        .withVelocityY(MaxSpeed * m_speedChooser.getSelected())
+        .withRotationalRate(0);
+
         swerve.setControl(m_Request);
+
+        driverController.povUp().whileTrue(swerve.setControl(forward));
+        driverController.povDown().whileTrue(swerve.setControl(backword));
+        driverController.povRight().whileTrue(swerve.setControl(right));
+        driverController.povLeft().whileTrue(swerve.setControl(left));
 
         double currentSpeed = swerve.getState().Speeds.vxMetersPerSecond;
         SmartDashboard.putNumber("Current Speed", currentSpeed);

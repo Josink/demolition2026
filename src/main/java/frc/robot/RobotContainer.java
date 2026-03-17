@@ -72,15 +72,7 @@ public class RobotContainer {
             )
         );
 
-        // Idle while the robot is disabled. This ensures the configured
-        // neutral mode is applied to the drive motors while disabled.
-        final var idle = new SwerveRequest.Idle();
-        RobotModeTriggers.disabled().whileTrue(
-            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
-        );
-
         drivetrain.registerTelemetry(logger::telemeterize);
-
 
         //OPERATPOR JOYSTICK BINDINGS
         turret.setDefaultCommand(    

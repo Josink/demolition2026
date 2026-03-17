@@ -87,27 +87,6 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        DriverJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        DriverJoystick.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-DriverJoystick.getLeftY(), -DriverJoystick.getLeftX()))
-        ));
-
-        DriverJoystick.povUp().whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityX(3).withVelocityY(0))
-        );
-        DriverJoystick.povDown().whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityX(-3).withVelocityY(0))
-        );
-        DriverJoystick.povRight().whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityY(-3).withVelocityX(0))
-        );
-        DriverJoystick.povLeft().whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityY(3).withVelocityX(0))
-        );
-
-        // Reset the field-centric heading on left bumper press.
-        DriverJoystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-
         drivetrain.registerTelemetry(logger::telemeterize);
 
 

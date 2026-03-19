@@ -30,9 +30,9 @@ public class Vision extends SubsystemBase {
 
   int[] validIDs = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
 
-  Pose2d hubAprilTag;
-
-  public Optional<Alliance> alliance;
+  private Pose2d hubAprilTag;
+  private PoseEstimate estimate;
+  private Optional<Alliance> alliance;
 
   public Vision(CommandSwerveDrivetrain drivetrain) {
     this.drivetrain = drivetrain;
@@ -46,7 +46,7 @@ public class Vision extends SubsystemBase {
     LimelightHelpers.SetRobotOrientation("limelight-left", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
     LimelightHelpers.SetRobotOrientation("limelight-right", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
         
-    PoseEstimate estimate = getBestPoseEstimate();
+    estimate = getBestPoseEstimate();
     
     if (!isValid(estimate)) return;
 

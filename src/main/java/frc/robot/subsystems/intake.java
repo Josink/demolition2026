@@ -100,7 +100,7 @@ public class Intake extends SubsystemBase {
     intakeMotor.getConfigurator().apply(talonconfigs);
 
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     intakeMotor.getConfigurator().apply(motorOutputConfigs);

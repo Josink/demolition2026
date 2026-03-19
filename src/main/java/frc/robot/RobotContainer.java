@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,7 +49,7 @@ public class RobotContainer {
     public RobotContainer() {
         manualPlay = new ManualPlay(
             indexer, turret, intake, OperatorJoystick,
-            60, 70, 70, 40, -0.7, 0.7, 2
+            60, 70, 70, 40, 0.7, -0.7, 2
         );
 
         autoPlay = new AutoPlay(

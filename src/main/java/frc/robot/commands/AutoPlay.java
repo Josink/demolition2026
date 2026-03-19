@@ -28,7 +28,9 @@ public class AutoPlay extends Command {
   private final double lowIndexerVelocity;
   private final double bIntakeVelocity;
 
- 
+  private double vx;
+  private double vy;
+  
   public AutoPlay(Indexer indexer, Turret turret, Intake intake, 
                   Vision vision, CommandXboxController operatorJoystick, 
                   double tolerance, double indexerVelocity, double intakeVelocity,
@@ -55,6 +57,9 @@ public class AutoPlay extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    vx = drivetrain.getState().Speeds.vxMetersPerSecond;
+    vy = drivetrain.getState().Speeds.vyMetersPerSecond;
+    
     double turretAngle = vision.getAngleToHub().in(Degrees);
     turret.setTurretAngleDegrees(turretAngle/2);
 

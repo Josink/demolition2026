@@ -26,10 +26,6 @@ public class SwerveDrive extends Command {
     private SendableChooser<Double> m_speedChooser;
 
     private SwerveRequest m_Request;
-    private SwerveRequest forward;
-    private SwerveRequest backward;
-    private SwerveRequest left;
-    private SwerveRequest right;
 
     // Use open-loop control for drive motors
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
@@ -71,7 +67,6 @@ public class SwerveDrive extends Command {
 
     @Override
     public void execute(){
-
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
@@ -91,35 +86,10 @@ public class SwerveDrive extends Command {
         .withVelocityY(slewX.calculate(xVal * MaxSpeed))
         .withRotationalRate(slewR.calculate(rotationVal * MaxAngularRate));
 
-        forward = drive.withVelocityX(MaxSpeed * m_speedChooser.getSelected())
-        .withVelocityY(0)
-        .withRotationalRate(0);
-
-        backward = drive.withVelocityX(-MaxSpeed * m_speedChooser.getSelected())
-        .withVelocityY(0)
-        .withRotationalRate(0);
-
-        right = drive.withVelocityX(0)
-        .withVelocityY(-MaxSpeed * m_speedChooser.getSelected())
-        .withRotationalRate(0);
-
-        left = drive.withVelocityX(0)
-        .withVelocityY(MaxSpeed * m_speedChooser.getSelected())
-        .withRotationalRate(0);
-
         swerve.setControl(m_Request);
 
-        driverController.povUp().whileTrue(Drive(forward));
-        driverController.povDown().whileTrue(Drive(backward));
-        driverController.povRight().whileTrue(Drive(right));
-        driverController.povLeft().whileTrue(Drive(left));
-
         double currentSpeed = swerve.getState().Speeds.vxMetersPerSecond;
-        SmartDashboard.putNumber("Current Speed", currentSpeed);
-    }
-
-    private Command Drive(SwerveRequest request) {
-        return swerve.run(() -> swerve.setControl(request));
+        SmartDashboard.putNumber("Current Drive Speed (M/S)", currentSpeed);
     }
 
     @Override

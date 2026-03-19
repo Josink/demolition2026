@@ -32,6 +32,8 @@ public class Vision extends SubsystemBase {
 
   Pose2d hubAprilTag;
 
+  public Optional<Alliance> alliance;
+
   public Vision(CommandSwerveDrivetrain drivetrain) {
     this.drivetrain = drivetrain;
     LimelightHelpers.SetFiducialIDFiltersOverride("limelight-left", validIDs);
@@ -40,8 +42,9 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    alliance = DriverStation.getAlliance();
     LimelightHelpers.SetRobotOrientation("limelight-left", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.SetRobotOrientation("limelight-rigt", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.SetRobotOrientation("limelight-right", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
         
     PoseEstimate estimate = getBestPoseEstimate();
     
@@ -62,9 +65,6 @@ public class Vision extends SubsystemBase {
   }
 
   public PoseEstimate getBestPoseEstimate() {
-
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-
     PoseEstimate left;
     PoseEstimate right;
     

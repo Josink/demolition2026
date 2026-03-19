@@ -8,7 +8,7 @@ import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -26,6 +26,7 @@ public class Intake extends SubsystemBase {
 
   private final Compressor compressor = new Compressor(2, PneumaticsModuleType.REVPH);
   private final DoubleSolenoid intakeSolenoid = new DoubleSolenoid(2,PneumaticsModuleType.REVPH, 0, 1);
+  private DutyCycleOut intake = new DutyCycleOut(0);
 
   public Intake() {
     applyIntakeMotorConfigs();
@@ -69,8 +70,9 @@ public class Intake extends SubsystemBase {
   }
 
   public void rotateToVelocity(double velocity){
-    final MotionMagicVelocityTorqueCurrentFOC request =  new MotionMagicVelocityTorqueCurrentFOC(velocity);
-    intakeMotor.setControl(request);
+    intake.Output = velocity;
+    intake.EnableFOC = true;
+    intakeMotor.setControl(intake);
   }
 
   public void manualControl(BooleanSupplier down, BooleanSupplier up){

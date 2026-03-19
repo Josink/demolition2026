@@ -20,28 +20,31 @@ public class ManualShoot extends Command {
   private final Indexer indexer;
   private final Turret turret;
   private final Intake intake;
-  private final Vision vision;
 
   private final CommandXboxController operatorJoystick;
-  private final double degrees;
   private final double shootVelocity;
   private final double funnelVelocity;
   private final double intakeVelocity;
+  private final double bIntakeVelocity;
   private final double indexerVelocity;
+  private final double lowIndexerVelocity;
   private final double tolerance;
   
-  public ManualShoot(Indexer indexer, Turret turret, Intake intake, CommandXboxController operatorJoystick, Vision vision, double degrees, double shootVelocity, double funnelVelocity, double indexerVelocity, double intakeVelocity, double tolerance) {
+  public ManualShoot(Indexer indexer, Turret turret, Intake intake, CommandXboxController operatorJoystick,
+                      double shootVelocity, double funnelVelocity, 
+                      double indexerVelocity, double lowIndexerVelocity, double intakeVelocity,double bIntakeVelocity, 
+                      double tolerance) {
     this.indexer = indexer;
     this.turret = turret;
     this.intake = intake;
-    this.vision = vision;
     
     this.operatorJoystick = operatorJoystick;
-    this.degrees = degrees;
     this.shootVelocity = shootVelocity;
     this.funnelVelocity = funnelVelocity;
     this.indexerVelocity = indexerVelocity;
+    this.lowIndexerVelocity = lowIndexerVelocity;
     this.intakeVelocity = intakeVelocity;
+    this.bIntakeVelocity = bIntakeVelocity;
     this.tolerance = tolerance;
     
     addRequirements(indexer, turret, intake);
@@ -59,26 +62,30 @@ public class ManualShoot extends Command {
     SmartDashboard.putNumber("Funnel Velocity", turret.getFunnelVelocity());
     SmartDashboard.putNumber("Turret Position", turret.getTurretPosition());
 
-    if (operatorJoystick.getLeftX() >= 0.15 || operatorJoystick.getLeftX() <= -0.15){
-      turret.rotateTurret(MathUtil.applyDeadband(operatorJoystick.getLeftX()*0.2, 0.1));
-    }
+    // GOOD - read joystick live
+    double joyX = MathUtil.applyDeadband(operatorJoystick.getLeftX(), 0.15);
 
-    if(operatorJoystick.x().getAsBoolean()){
-        double turretAngle = vision.getAngleToHub().in(Degrees);
-        turret.setTurretAngleDegrees(turretAngle/2);
+    if (Math.abs(joyX) > 0){
+      turret.rotateTurret(joyX * 0.2);
+    } else if (operatorJoystick.x().getAsBoolean()){
+      turret.rotateToPos(0.25);
+    } else {
+      turret.stopTurret();
     }
 
     if (operatorJoystick.rightTrigger().getAsBoolean()) {
-      turret.setTurretAngleDegrees(degrees);
-
       turret.rotateToVelocity(shootVelocity);
       turret.rotateFunnelToVelocity(funnelVelocity);
+      indexer.rotateToVelocity(lowIndexerVelocity);
+      intake.rotateToVelocity(bIntakeVelocity);
 
       if(turret.shooterAtVelocity(shootVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
         indexer.rotateToVelocity(indexerVelocity);
-        intake.rotateToVelocity(intakeVelocity);
+        intake.rotateToVelocity(bIntakeVelocity);
       }
-    } else{
+    } else if(operatorJoystick.leftTrigger().getAsBoolean()){
+      intake.rotateToVelocity(intakeVelocity);
+    }else{
       turret.stopShooter(0);
       turret.stopFunnel(0);
       intake.stopIntake();
@@ -91,12 +98,6 @@ public class ManualShoot extends Command {
       intake.up();
     } else{
       intake.off();
-    }
-
-    if (operatorJoystick.leftTrigger().getAsBoolean()){
-      intake.rotateToVelocity(-intakeVelocity);
-    } else {
-      intake.stopIntake();
     }
   }
 

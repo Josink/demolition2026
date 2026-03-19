@@ -23,6 +23,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        SignalLogger.enableAutoLogging(false);
         SignalLogger.setPath("/home/lvuser/logs/");
     }
 
@@ -59,10 +60,6 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
-        }
-
-        if (m_robotContainer.turretControlMode.getSelected() != null) {
-            m_robotContainer.turretControlMode.getSelected().schedule();
         }
 
         if (m_sysIdMode) {

@@ -24,9 +24,10 @@ public class AutoPlay extends Command {
   private final CommandXboxController operatorJoystick;
   private final double tolerance;
   private final double indexerVelocity;
+  private final double intakeVelocity;
 
  
-  public AutoPlay(Indexer indexer, Turret turret, Intake intake, Vision vision, CommandXboxController operatorJoystick, double tolerance, double indexerVelocity) {
+  public AutoPlay(Indexer indexer, Turret turret, Intake intake, Vision vision, CommandXboxController operatorJoystick, double tolerance, double indexerVelocity, double intakeVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.indexer = indexer;
     this.turret = turret;
@@ -35,6 +36,7 @@ public class AutoPlay extends Command {
     this.operatorJoystick = operatorJoystick;
     this.tolerance = tolerance;
     this.indexerVelocity = indexerVelocity;
+    this.intakeVelocity = intakeVelocity;
     
     addRequirements(indexer, turret, intake, vision);
   }
@@ -61,6 +63,8 @@ public class AutoPlay extends Command {
 
       if(turret.shooterAtVelocity(shooterVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
         indexer.rotateToVelocity(indexerVelocity);
+        intake.rotateToVelocity(intakeVelocity);
+
       }
 
     } else {

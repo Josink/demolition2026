@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,23 +38,28 @@ public class RobotContainer {
 
     public final Vision vision = new Vision(drivetrain);
 
+    private boolean isAutoMode = false;
+    private Command manualPlay;
+    private Command autoPlay;
+
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
-    public final SendableChooser<Command> turretControlMode;
-
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Mode", autoChooser);
-
-        turretControlMode = new SendableChooser<Command>();
-        turretControlMode.addOption("Manual Control", new ManualShoot(indexer, turret, intake, OperatorJoystick, vision, 180, 85, 70, 70, -30, 2));
-        turretControlMode.addOption("Auto Control", new AutoPlay(indexer, turret, intake, vision, OperatorJoystick, 2, 70));
-        turretControlMode.setDefaultOption(
-            "Manual Control",
-            new ManualShoot(indexer, turret, intake, OperatorJoystick, vision, 180, 85, 70, 70, -30, 2)
+        manualPlay = new ManualShoot(
+            indexer, turret, intake, OperatorJoystick,
+            60, 70, 70, 40, -0.7, 0.7, 2
         );
-        SmartDashboard.putData("Turret Control Mode", turretControlMode);
+
+        autoPlay = new AutoPlay(
+            indexer, turret, intake, vision, OperatorJoystick, 
+            2, 100, -0.7
+        );
+
+        autoChooser = AutoBuilder.buildAutoChooser();
+
+        SmartDashboard.putData("Auto Mode", autoChooser);
+        SmartDashboard.putBoolean("Auto Mode Enabled", isAutoMode);
 
         configureBindings();
 
@@ -62,7 +68,6 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-
         drivetrain.setDefaultCommand(
             new SwerveDrive(
                 drivetrain, 
@@ -72,13 +77,24 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
+
         //OPERATPOR JOYSTICK BINDINGS
-        turret.setDefaultCommand(    
-            turret.run(() -> {
-            turret.stopShooter(0);
-            turret.stopFunnel(0);
-        }));
+        OperatorJoystick.button(7).onTrue(
+            turret.runOnce(() -> {
+                isAutoMode = !isAutoMode;
+                SmartDashboard.putBoolean("Auto Mode Enabled", isAutoMode);
+            })
+        );
+
+        turret.setDefaultCommand(
+            Commands.either(
+                autoPlay,
+                manualPlay,
+                () -> isAutoMode
+            )
+        );
         
+
         // indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
         //     OperatorJoystick.rightTrigger(), //index
         //     100))); //speed

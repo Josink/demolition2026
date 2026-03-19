@@ -91,10 +91,8 @@ public class Turret extends SubsystemBase {
     funnelMotor.set(speed);
   }
 
-  public void rotateTurret(double duty){
-    rotate.Output = duty;
-    rotate.EnableFOC = true;
-    turretMotor.setControl(rotate);
+  public void rotateTurret(double percent){
+    turretMotor.set(percent); 
   }
 
   public void stopTurret(){
@@ -215,9 +213,9 @@ public class Turret extends SubsystemBase {
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration(); 
 
     SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonconfigs.SoftwareLimitSwitch;
-    softwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
+    softwareLimitSwitchConfigs.ForwardSoftLimitEnable = false;
     softwareLimitSwitchConfigs.ForwardSoftLimitThreshold = Constants.turretConstants.ForwardSoftLimitThreshold;
-    softwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
+    softwareLimitSwitchConfigs.ReverseSoftLimitEnable = false;
     softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = Constants.turretConstants.ReverseSoftLimitThreshold;
 
     talonconfigs.Slot0.kP = Constants.turretConstants.kP;
@@ -286,11 +284,11 @@ public class Turret extends SubsystemBase {
 
     MotorOutputConfigs rmotorOutputConfigs = new MotorOutputConfigs();
     rmotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
-    rmotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+    rmotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     MotorOutputConfigs lmotorOutputConfigs = new MotorOutputConfigs();
     lmotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    lmotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+    lmotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     lShootingMotor.getConfigurator().apply(lmotorOutputConfigs);
     funnelMotor.getConfigurator().apply(lmotorOutputConfigs); 

@@ -28,7 +28,8 @@ public class SwerveDrive extends Command {
     private SwerveRequest m_Request;
 
     // Use open-loop control for drive motors
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+ 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
     private CommandXboxController driverController;

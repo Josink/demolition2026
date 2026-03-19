@@ -25,9 +25,14 @@ public class AutoPlay extends Command {
   private final double tolerance;
   private final double indexerVelocity;
   private final double intakeVelocity;
+  private final double lowIndexerVelocity;
+  private final double bIntakeVelocity;
 
  
-  public AutoPlay(Indexer indexer, Turret turret, Intake intake, Vision vision, CommandXboxController operatorJoystick, double tolerance, double indexerVelocity, double intakeVelocity) {
+  public AutoPlay(Indexer indexer, Turret turret, Intake intake, 
+                  Vision vision, CommandXboxController operatorJoystick, 
+                  double tolerance, double indexerVelocity, double intakeVelocity,
+                  double lowIndexerVelocity, double bIntakeVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.indexer = indexer;
     this.turret = turret;
@@ -37,6 +42,8 @@ public class AutoPlay extends Command {
     this.tolerance = tolerance;
     this.indexerVelocity = indexerVelocity;
     this.intakeVelocity = intakeVelocity;
+    this.lowIndexerVelocity = lowIndexerVelocity;
+    this.bIntakeVelocity = bIntakeVelocity;
     
     addRequirements(indexer, turret, intake, vision);
   }
@@ -60,26 +67,34 @@ public class AutoPlay extends Command {
     if(operatorJoystick.rightTrigger().getAsBoolean()) {
       turret.rotateToVelocity(shooterVelocity);
       turret.rotateFunnelToVelocity(funnelVelocity);
+      indexer.rotateToVelocity(lowIndexerVelocity);
+      intake.rotateToVelocity(bIntakeVelocity);
 
       if(turret.shooterAtVelocity(shooterVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
         indexer.rotateToVelocity(indexerVelocity);
-        intake.rotateToVelocity(intakeVelocity);
-
+        intake.rotateToVelocity(bIntakeVelocity);
       }
-
+    } else if(operatorJoystick.leftTrigger().getAsBoolean()){
+      intake.rotateToVelocity(intakeVelocity);
     } else {
       turret.stopShooter(0);
       turret.stopFunnel(0);
       intake.stopIntake();
       indexer.stopIndexer();
     }
+
+    if(operatorJoystick.leftBumper().getAsBoolean()){
+      intake.down();
+    } else if (operatorJoystick.rightBumper().getAsBoolean()){
+      intake.up();
+    } else{
+      intake.off();
+    }
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

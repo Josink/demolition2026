@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoPlay;
-import frc.robot.commands.ManualShoot;
+import frc.robot.commands.ManualPlay;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -46,14 +46,14 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        manualPlay = new ManualShoot(
+        manualPlay = new ManualPlay(
             indexer, turret, intake, OperatorJoystick,
             60, 70, 70, 40, -0.7, 0.7, 2
         );
 
         autoPlay = new AutoPlay(
             indexer, turret, intake, vision, OperatorJoystick, 
-            2, 100, -0.7
+            2, 100, -0.7, 40, 0.7
         );
 
         autoChooser = AutoBuilder.buildAutoChooser();

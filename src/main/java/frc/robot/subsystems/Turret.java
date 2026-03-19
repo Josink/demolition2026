@@ -91,8 +91,10 @@ public class Turret extends SubsystemBase {
     funnelMotor.set(speed);
   }
 
-  public void rotateTurret(double percent){
-    turretMotor.set(percent); 
+  public void rotateTurret(double duty){
+    rotate.Output = duty;
+    rotate.EnableFOC = true;
+    turretMotor.setControl(rotate);
   }
 
   public void stopTurret(){
@@ -213,9 +215,9 @@ public class Turret extends SubsystemBase {
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration(); 
 
     SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonconfigs.SoftwareLimitSwitch;
-    softwareLimitSwitchConfigs.ForwardSoftLimitEnable = false;
+    softwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
     softwareLimitSwitchConfigs.ForwardSoftLimitThreshold = Constants.turretConstants.ForwardSoftLimitThreshold;
-    softwareLimitSwitchConfigs.ReverseSoftLimitEnable = false;
+    softwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
     softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = Constants.turretConstants.ReverseSoftLimitThreshold;
 
     talonconfigs.Slot0.kP = Constants.turretConstants.kP;

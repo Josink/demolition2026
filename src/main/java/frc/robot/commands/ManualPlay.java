@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,9 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.Vision;
 
-public class ManualShoot extends Command {
+public class ManualPlay extends Command {
   /** Creates a new ManualShoot. */
   private final Indexer indexer;
   private final Turret turret;
@@ -30,7 +27,7 @@ public class ManualShoot extends Command {
   private final double lowIndexerVelocity;
   private final double tolerance;
   
-  public ManualShoot(Indexer indexer, Turret turret, Intake intake, CommandXboxController operatorJoystick,
+  public ManualPlay(Indexer indexer, Turret turret, Intake intake, CommandXboxController operatorJoystick,
                       double shootVelocity, double funnelVelocity, 
                       double indexerVelocity, double lowIndexerVelocity, double intakeVelocity,double bIntakeVelocity, 
                       double tolerance) {
@@ -62,14 +59,17 @@ public class ManualShoot extends Command {
     SmartDashboard.putNumber("Funnel Velocity", turret.getFunnelVelocity());
     SmartDashboard.putNumber("Turret Position", turret.getTurretPosition());
 
-    // GOOD - read joystick live
     double joyX = MathUtil.applyDeadband(operatorJoystick.getLeftX(), 0.15);
-
     if (Math.abs(joyX) > 0){
       turret.rotateTurret(joyX * 0.2);
     } else if (operatorJoystick.x().getAsBoolean()){
       turret.rotateToPos(0.25);
-    } else {
+    }  else if (operatorJoystick.y().getAsBoolean()){
+      turret.rotateToPos(0.5);
+    } else if (operatorJoystick.a().getAsBoolean()){
+      turret.rotateToPos(-0.25);
+    }
+      else {
       turret.stopTurret();
     }
 

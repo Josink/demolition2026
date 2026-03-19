@@ -115,8 +115,17 @@ public class Vision extends SubsystemBase {
 
     Pose2d robotPose = est.pose;
 
-    double dx = hubAprilTag.getX() - robotPose.getX();
-    double dy = hubAprilTag.getY() - robotPose.getY();
+    double vx = drivetrain.getState().Speeds.vxMetersPerSecond;
+    double vy = drivetrain.getState().Speeds.vyMetersPerSecond;
+
+    double t = getShotTimeSeconds();
+
+    // Predict where robot will be when ball exits
+    double futureX = robotPose.getX() + vx * t;
+    double futureY = robotPose.getY() + vy * t;
+
+    double dx = hubAprilTag.getX() - futureX;
+    double dy = hubAprilTag.getY() - futureY;
 
     double angle = Math.toDegrees(Math.atan2(dy, dx));
 

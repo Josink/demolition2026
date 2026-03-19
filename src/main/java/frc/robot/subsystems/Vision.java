@@ -113,7 +113,13 @@ public class Vision extends SubsystemBase {
     PoseEstimate est = getBestPoseEstimate();
     if (est == null) return null;
 
-    double angleToHub = est.pose.getRotation().minus(hubAprilTag.getRotation()).getDegrees();
-    return Degree.of(angleToHub);
+    Pose2d robotPose = est.pose;
+
+    double dx = hubAprilTag.getX() - robotPose.getX();
+    double dy = hubAprilTag.getY() - robotPose.getY();
+
+    double angle = Math.toDegrees(Math.atan2(dy, dx));
+
+    return Degree.of(angle);
   }
 }

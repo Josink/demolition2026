@@ -122,4 +122,14 @@ public class Vision extends SubsystemBase {
 
     return Degree.of(angle);
   }
+
+  public double getShotTimeSeconds(double shotSpeed) {
+    Distance dist = getDistanceToHub();
+    if (dist == null) return 0.0;
+
+    double d = dist.in(Meters);
+
+    return d / shotSpeed;
+}
+  
 }

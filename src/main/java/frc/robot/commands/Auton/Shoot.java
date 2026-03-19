@@ -2,45 +2,39 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Auton;
 
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AutoPlay extends Command {
+public class Shoot extends Command {
   /** Creates a new AutoPlay. */
   private final Indexer indexer;
   private final Turret turret;
   private final Intake intake;
   private final Vision vision;
 
-  private final CommandXboxController operatorJoystick;
   private final double tolerance;
   private final double indexerVelocity;
-  private final double intakeVelocity;
   private final double lowIndexerVelocity;
   private final double bIntakeVelocity;
   
-  public AutoPlay(Indexer indexer, Turret turret, Intake intake, 
-                  Vision vision, CommandXboxController operatorJoystick, 
-                  double tolerance, double indexerVelocity, double intakeVelocity,
+  public Shoot(Indexer indexer, Turret turret, Intake intake, 
+                  Vision vision, double tolerance, double indexerVelocity,
                   double lowIndexerVelocity, double bIntakeVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.indexer = indexer;
     this.turret = turret;
     this.intake = intake;
     this.vision = vision;
-    this.operatorJoystick = operatorJoystick;
     this.tolerance = tolerance;
     this.indexerVelocity = indexerVelocity;
-    this.intakeVelocity = intakeVelocity;
     this.lowIndexerVelocity = lowIndexerVelocity;
     this.bIntakeVelocity = bIntakeVelocity;
     
@@ -63,32 +57,16 @@ public class AutoPlay extends Command {
     double turretAngle = vision.getAngleToHub(shooterVelocity).in(Degrees);
     turret.setTurretAngleDegrees(turretAngle);
 
-    if(operatorJoystick.rightTrigger().getAsBoolean()) {
-      turret.rotateToVelocity(shooterVelocity);
-      turret.rotateFunnelToVelocity(funnelVelocity);
-      indexer.rotateToVelocity(lowIndexerVelocity);
+    turret.rotateToVelocity(shooterVelocity);
+    turret.rotateFunnelToVelocity(funnelVelocity);
+    indexer.rotateToVelocity(lowIndexerVelocity);
+    intake.rotateToVelocity(bIntakeVelocity);
+
+    if(turret.shooterAtVelocity(shooterVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
+      indexer.rotateToVelocity(indexerVelocity);
       intake.rotateToVelocity(bIntakeVelocity);
-
-      if(turret.shooterAtVelocity(shooterVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
-        indexer.rotateToVelocity(indexerVelocity);
-        intake.rotateToVelocity(bIntakeVelocity);
-      }
-    } else if(operatorJoystick.leftTrigger().getAsBoolean()){
-      intake.rotateToVelocity(intakeVelocity);
-    } else {
-      turret.stopShooter(0);
-      turret.stopFunnel(0);
-      intake.stopIntake();
-      indexer.stopIndexer();
     }
 
-    if(operatorJoystick.leftBumper().getAsBoolean()){
-      intake.down();
-    } else if (operatorJoystick.rightBumper().getAsBoolean()){
-      intake.up();
-    } else{
-      intake.off();
-    }
   }
 
   @Override

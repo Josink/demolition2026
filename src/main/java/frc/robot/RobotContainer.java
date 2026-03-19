@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoPlay;
 import frc.robot.commands.ManualPlay;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.commands.Auton.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret;
@@ -47,6 +48,8 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
+        NamedCommands.registerCommand("Shoot", new Shoot(indexer, turret, intake, vision, 5, 70, 40, -0.7));
+
         manualPlay = new ManualPlay(
             indexer, turret, intake, OperatorJoystick,
             60, 70, 70, 40, 0.7, -0.7, 2

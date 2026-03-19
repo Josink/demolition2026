@@ -21,6 +21,12 @@
           "data": {
             "pathName": "Left 3"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left 4"
+          }
         }
       ]
     }

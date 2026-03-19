@@ -109,7 +109,7 @@ public class Vision extends SubsystemBase {
     return Meters.of(distanceToHub);
   }
 
-  public Angle getAngleToHub() {
+  public Angle getAngleToHub(double shotSpeed) {
     PoseEstimate est = getBestPoseEstimate();
     if (est == null) return null;
 
@@ -118,7 +118,7 @@ public class Vision extends SubsystemBase {
     double vx = drivetrain.getState().Speeds.vxMetersPerSecond;
     double vy = drivetrain.getState().Speeds.vyMetersPerSecond;
 
-    double t = getShotTimeSeconds();
+    double t = getShotTimeSeconds(shotSpeed);
 
     // Predict where robot will be when ball exits
     double futureX = robotPose.getX() + vx * t;

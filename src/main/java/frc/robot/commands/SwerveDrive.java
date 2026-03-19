@@ -26,9 +26,11 @@ public class SwerveDrive extends Command {
     private SendableChooser<Double> m_speedChooser;
 
     private SwerveRequest m_Request;
+    private SwerveRequest c_Request;
 
     // Use open-loop control for drive motors
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    private final SwerveRequest.FieldCentric cDrive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.Velocity);
  
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
@@ -87,7 +89,13 @@ public class SwerveDrive extends Command {
         .withVelocityY(slewX.calculate(xVal * MaxSpeed))
         .withRotationalRate(slewR.calculate(rotationVal * MaxAngularRate));
 
-        swerve.setControl(m_Request);
+        c_Request = cDrive.withVelocityX(yVal * MaxSpeed)
+        .withVelocityY(xVal * MaxSpeed)
+        .withRotationalRate(rotationVal * MaxAngularRate);
+
+        //swerve.setControl(m_Request);
+        swerve.setControl(c_Request);
+
 
         double currentSpeed = swerve.getState().Speeds.vxMetersPerSecond;
         SmartDashboard.putNumber("Current Drive Speed (M/S)", currentSpeed);

@@ -11,9 +11,13 @@ import frc.robot.subsystems.Intake;
 public class IntakeFuel extends Command {
   /** Creates a new IntakeFuel. */
   private final Intake intake;
+  private boolean down;
 
-  public IntakeFuel(Intake intake, Boolean up) {
+  public IntakeFuel(Intake intake, Boolean down) {
     this.intake = intake;
+    this.down = down;
+
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
@@ -22,7 +26,13 @@ public class IntakeFuel extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if(down){
+      intake.down();
+    } else{
+      intake.up();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

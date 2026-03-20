@@ -62,7 +62,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Rotate Turret", new RotateTurret(turret, 0.25));
 
         manualPlay = new ManualPlay(
-            indexer, turret, intake, OperatorJoystick,
+            indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(),
+            OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
             80, 70, 70, 30, 0.7, -0.5, 2
         );
 

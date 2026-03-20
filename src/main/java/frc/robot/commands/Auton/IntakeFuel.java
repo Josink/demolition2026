@@ -5,18 +5,18 @@
 package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.indexer;
+import frc.robot.subsystems.intake;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class IntakeFuel extends Command {
   /** Creates a new IntakeFuel. */
-  private final Intake intake;
-  private final Indexer indexer;
+  private final intake intake;
+  private final indexer indexer;
   private final double intakeSpeed;
   private final double indexSpeed;
 
-  public IntakeFuel(Intake intake, Indexer indexer, double intakeSpeed, double indexSpeed) {
+  public IntakeFuel(intake intake, indexer indexer, double intakeSpeed, double indexSpeed) {
     this.intake = intake;
     this.indexer = indexer;
     this.intakeSpeed = intakeSpeed;

@@ -8,17 +8,17 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.indexer;
+import frc.robot.subsystems.intake;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AutoPlay extends Command {
   /** Creates a new AutoPlay. */
-  private final Indexer indexer;
+  private final indexer indexer;
   private final Turret turret;
-  private final Intake intake;
+  private final intake intake;
   private final Vision vision;
 
   private final CommandXboxController operatorJoystick;
@@ -28,8 +28,14 @@ public class AutoPlay extends Command {
   private final double lowIndexerVelocity;
   private final double bIntakeVelocity;
   
+<<<<<<< HEAD
   public AutoPlay(Indexer indexer, Turret turret, Intake intake, 
                   Vision vision, CommandXboxController operatorJoystick, 
+=======
+  public AutoPlay(indexer indexer, Turret turret, intake intake, 
+                  Vision vision, BooleanSupplier leftTrigger, BooleanSupplier rightTrigger,
+                  BooleanSupplier leftBumper, BooleanSupplier rightBumper,
+>>>>>>> 21b9250 (Changes powesr helped me make)
                   double tolerance, double indexerVelocity, double intakeVelocity,
                   double lowIndexerVelocity, double bIntakeVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.

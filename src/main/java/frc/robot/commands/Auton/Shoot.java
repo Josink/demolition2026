@@ -7,17 +7,17 @@ package frc.robot.commands.Auton;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.indexer;
+import frc.robot.subsystems.intake;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Shoot extends Command {
   /** Creates a new AutoPlay. */
-  private final Indexer indexer;
+  private final indexer indexer;
   private final Turret turret;
-  private final Intake intake;
+  private final intake intake;
   private final Vision vision;
 
   private final double tolerance;
@@ -25,7 +25,7 @@ public class Shoot extends Command {
   private final double lowIndexerVelocity;
   private final double bIntakeVelocity;
   
-  public Shoot(Indexer indexer, Turret turret, Intake intake, 
+  public Shoot(indexer indexer, Turret turret, intake intake, 
                   Vision vision, double tolerance, double indexerVelocity,
                   double lowIndexerVelocity, double bIntakeVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.

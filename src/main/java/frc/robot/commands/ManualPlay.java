@@ -22,6 +22,10 @@ public class ManualPlay extends Command {
   private BooleanSupplier rightTrigger;
   private BooleanSupplier leftBumper;
   private BooleanSupplier rightBumper;
+  private BooleanSupplier x;
+  private BooleanSupplier y;
+  private BooleanSupplier a;
+
   private final double shootVelocity;
   private final double funnelVelocity;
   private final double intakeVelocity;
@@ -33,6 +37,7 @@ public class ManualPlay extends Command {
   
   public ManualPlay(Indexer indexer, Turret turret, Intake intake, double leftX, BooleanSupplier leftTrigger, 
                     BooleanSupplier rightTrigger, BooleanSupplier leftBumper, BooleanSupplier rightBumper,
+                    BooleanSupplier x, BooleanSupplier y, BooleanSupllier a,
                     double shootVelocity, double funnelVelocity, double indexerVelocity, 
                     double lowIndexerVelocity, double intakeVelocity,double bIntakeVelocity, 
                       double tolerance) {
@@ -44,6 +49,10 @@ public class ManualPlay extends Command {
     this.rightTrigger = rightTrigger;
     this.leftBumper = leftBumper;
     this.rightBumper = rightBumper;
+    this.x = x;
+    this.y = y;
+    this.a = a;
+    
     this.shootVelocity = shootVelocity;
     this.funnelVelocity = funnelVelocity;
     this.indexerVelocity = indexerVelocity;
@@ -68,13 +77,14 @@ public class ManualPlay extends Command {
     SmartDashboard.putNumber("Funnel Velocity", turret.getFunnelVelocity());
     SmartDashboard.putNumber("Turret Position", turret.getTurretPosition());
 
-    if (Math.abs(leftX) > 0){
+    double joyX = MathUtil.applyDeadband(leftX, 0.05);
+    if (Math.abs(joyX) > 0){
       turret.rotateTurret(joyX * 0.2);
-    } else if (operatorJoystick.x().getAsBoolean()){
+    } else if (x.getAsBoolean()){
       turret.rotateToPos(0.25);
-    }  else if (operatorJoystick.y().getAsBoolean()){
+    }  else if (y.getAsBoolean()){
       turret.rotateToPos(0.5);
-    } else if (operatorJoystick.a().getAsBoolean()){
+    } else if (a.getAsBoolean()){
       turret.rotateToPos(-0.25);
     }
       else {

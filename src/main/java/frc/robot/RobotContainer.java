@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Set;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -109,18 +111,15 @@ public class RobotContainer {
         //OPERATPOR JOYSTICK BINDINGS
         // Toggle Auto Mode on button 7
         OperatorJoystick.button(7).onTrue(
-            Commands.runOnce(() -> {
+            Commands.defer(() -> {
                 isAutoMode = !isAutoMode;
-                SmartDashboard.putBoolean("Auto Mode Enabled", isAutoMode);
 
                 if (isAutoMode) {
-                    autoPlay.schedule();      // schedule auto command once
-                    manualPlay.cancel();      // cancel manual command if running
+                    return autoPlay;
                 } else {
-                    manualPlay.schedule();    // schedule manual command once
-                    autoPlay.cancel();        // cancel auto command if running
+                    return manualPlay;
                 }
-            })
+            }, Set.of(indexer, turret, intake))
         );
         
 

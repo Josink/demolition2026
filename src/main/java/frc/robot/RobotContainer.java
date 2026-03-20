@@ -20,6 +20,7 @@ import frc.robot.commands.ManualPlay;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.Auton.Shoot;
 import frc.robot.commands.Auton.MoveIntake;
+import frc.robot.commands.Auton.RotateTurret;
 import frc.robot.commands.Auton.IntakeFuel;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -54,6 +55,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Down", new MoveIntake(intake, true));
         NamedCommands.registerCommand("Intake Up", new MoveIntake(intake, false));
         NamedCommands.registerCommand("Intake", new IntakeFuel(intake, indexer, 0.7, 40));
+        NamedCommands.registerCommand("Rotate Turret", new RotateTurret(turret, 0.25));
 
         manualPlay = new ManualPlay(
             indexer, turret, intake, OperatorJoystick,

@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left 1"
+                  "pathName": "Right 1"
                 }
               },
               {
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left 2"
+                  "pathName": "Right 2"
                 }
               },
               {
@@ -49,26 +49,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left 3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Left 4"
+                  "pathName": "Right 3"
                 }
               },
               {

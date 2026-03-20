@@ -42,7 +42,6 @@ public class Vision extends SubsystemBase {
   // Cache robot heading to avoid redundant calls
   private double lastHeading = 0.0;
 
-  // Cached VecBuilders for standard deviations
   // Cached vectors for standard deviations (Vector<N3>)
   private final Vector<N3> cachedStdDev2Tags = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(3));
   private final Vector<N3> cachedStdDev1Tag  = VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(10));

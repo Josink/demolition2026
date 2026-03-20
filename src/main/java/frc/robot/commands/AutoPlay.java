@@ -27,7 +27,6 @@ public class AutoPlay extends Command {
   private final double intakeVelocity;
   private final double lowIndexerVelocity;
   private final double bIntakeVelocity;
-
   private BooleanSupplier leftTrigger;
   private BooleanSupplier rightTrigger;
   private BooleanSupplier leftBumper;

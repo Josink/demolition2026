@@ -67,7 +67,8 @@ public class RobotContainer {
         );
 
         autoPlay = new AutoPlay(
-            indexer, turret, intake, vision, OperatorJoystick, 
+            indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(),
+            OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
             2, 100, 0.7, 40, -0.7
         );
 

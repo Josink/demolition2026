@@ -44,9 +44,9 @@ public class SwerveDrive extends Command {
         this.driverController = driver;
         addRequirements(swerve);
 
-        slewR = new SlewRateLimiter(MaxSpeed*0.90);
-        slewX = new SlewRateLimiter(MaxSpeed*0.90);
-        slewY = new SlewRateLimiter(MaxSpeed*0.90);
+        slewR = new SlewRateLimiter(3);
+        slewX = new SlewRateLimiter(3);
+        slewY = new SlewRateLimiter(4);
 
         m_speedChooser = new SendableChooser<Double>();
         m_speedChooser.addOption("100%", 1.0);
@@ -95,7 +95,6 @@ public class SwerveDrive extends Command {
 
         //swerve.setControl(m_Request);
         swerve.setControl(c_Request);
-
 
         double currentSpeed = swerve.getState().Speeds.vxMetersPerSecond;
         SmartDashboard.putNumber("Current Drive Speed (M/S)", currentSpeed);

@@ -62,12 +62,15 @@ public class RobotContainer {
         NamedCommands.registerCommand("Rotate Turret", new RotateTurret(turret, 0.25));
 
         manualPlay = new ManualPlay(
-            indexer, turret, intake, OperatorJoystick,
+            indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
+            OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
+            OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick::getLeftX,
             80, 70, 70, 30, 0.7, -0.5, 2
         );
 
         autoPlay = new AutoPlay(
-            indexer, turret, intake, vision, OperatorJoystick, 
+            indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
+            OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(), 
             2, 100, 0.7, 40, -0.7
         );
 
@@ -109,7 +112,7 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
-        // Toggle Auto Mode on button 7
+        //Toggle Auto Mode on button 7
         OperatorJoystick.button(7).onTrue(
             Commands.defer(() -> {
                 isAutoMode = !isAutoMode;
@@ -121,6 +124,7 @@ public class RobotContainer {
                 }
             }, Set.of(indexer, turret, intake))
         );
+        
         
 
         // indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(

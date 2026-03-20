@@ -64,6 +64,7 @@ public class RobotContainer {
         manualPlay = new ManualPlay(
             indexer, turret, intake, OperatorJoystick.getLeftX(), OperatorJoystick.leftTrigger(), 
             OperatorJoystick.rightTrigger(), OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
+            OPeratorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(),
             80, 70, 70, 30, 0.7, -0.5, 2
         );
 

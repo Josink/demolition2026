@@ -74,9 +74,6 @@ public class SwerveDrive extends Command {
         xVal = MathUtil.applyDeadband(-driverController.getLeftX() * m_speedChooser.getSelected(),0.05);
         yVal = MathUtil.applyDeadband(-driverController.getLeftY() * m_speedChooser.getSelected(), 0.1);
         rotationVal = MathUtil.applyDeadband(-driverController.getRightX() * m_speedChooser.getSelected(), 0.1);
-
-        driverController.rightBumper().whileTrue(swerve.applyRequest(() -> brake));
-        driverController.leftBumper().onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
         
         m_Request = drive.withVelocityX(slewY.calculate(yVal * MaxSpeed))
         .withVelocityY(slewX.calculate(xVal * MaxSpeed))
@@ -88,7 +85,6 @@ public class SwerveDrive extends Command {
 
         //swerve.setControl(m_Request);
         swerve.setControl(c_Request);
-
 
         double currentSpeed = swerve.getState().Speeds.vxMetersPerSecond;
         SmartDashboard.putNumber("Current Drive Speed (M/S)", currentSpeed);

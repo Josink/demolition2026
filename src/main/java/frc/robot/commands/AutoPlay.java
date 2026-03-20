@@ -23,15 +23,20 @@ public class AutoPlay extends Command {
   private final Intake intake;
   private final Vision vision;
 
-  private final CommandXboxController operatorJoystick;
   private final double tolerance;
   private final double indexerVelocity;
   private final double intakeVelocity;
   private final double lowIndexerVelocity;
   private final double bIntakeVelocity;
+  private BooleanSupplier leftTrigger;
+  private BooleanSupplier rightTrigger;
+  private BooleanSupplier leftBumper;
+  private BooleanSupplier rightBumper;
+
   
   public AutoPlay(Indexer indexer, Turret turret, Intake intake, 
-                  Vision vision, BooleanSupplier leftTrigger,  
+                  Vision vision, BooleanSupplier leftTrigger, BooleanSupplier rightTrigger,
+                  BooleanSupplier leftBumper, BooleanSupplier rightBumper,
                   double tolerance, double indexerVelocity, double intakeVelocity,
                   double lowIndexerVelocity, double bIntakeVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -39,7 +44,11 @@ public class AutoPlay extends Command {
     this.turret = turret;
     this.intake = intake;
     this.vision = vision;
-    this.operatorJoystick = operatorJoystick;
+    this.leftTrigger = leftTrigger;
+    this.rightTrigger = rightTrigger;
+    this.leftBumper = leftBumper;
+    this.rightBumper = rightBumper;
+    
     this.tolerance = tolerance;
     this.indexerVelocity = indexerVelocity;
     this.intakeVelocity = intakeVelocity;
@@ -65,7 +74,7 @@ public class AutoPlay extends Command {
     double turretAngle = vision.getAngleToHub(shooterVelocity).in(Degrees);
     turret.setTurretAngleDegrees(turretAngle);
 
-    if(operatorJoystick.rightTrigger().getAsBoolean()) {
+    if(rightTrigger.getAsBoolean()) {
       turret.rotateToVelocity(shooterVelocity);
       turret.rotateFunnelToVelocity(funnelVelocity);
       indexer.rotateToVelocity(lowIndexerVelocity);
@@ -75,7 +84,7 @@ public class AutoPlay extends Command {
         indexer.rotateToVelocity(indexerVelocity);
         intake.rotateToVelocity(bIntakeVelocity);
       }
-    } else if(operatorJoystick.leftTrigger().getAsBoolean()){
+    } else if(leftTrigger.getAsBoolean()){
       intake.rotateToVelocity(intakeVelocity);
     } else {
       turret.stopShooter(0);
@@ -84,9 +93,9 @@ public class AutoPlay extends Command {
       indexer.stopIndexer();
     }
 
-    if(operatorJoystick.leftBumper().getAsBoolean()){
+    if(leftBumper.getAsBoolean()){
       intake.down();
-    } else if (operatorJoystick.rightBumper().getAsBoolean()){
+    } else if (rightBumper.getAsBoolean()){
       intake.up();
     } else{
       intake.off();

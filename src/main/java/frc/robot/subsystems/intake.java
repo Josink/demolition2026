@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class intake extends SubsystemBase {
+public class Intake extends SubsystemBase {
   /** Creates a new intake. */
   private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID, "4998Canivore");
 
@@ -28,7 +28,7 @@ public class intake extends SubsystemBase {
   private final DoubleSolenoid intakeSolenoid = new DoubleSolenoid(2,PneumaticsModuleType.REVPH, 0, 1);
   private DutyCycleOut intake = new DutyCycleOut(0);
 
-  public intake() {
+  public Intake() {
     applyIntakeMotorConfigs();
     compressor.enableDigital();
     //setIntakeSolenoid(true, false);

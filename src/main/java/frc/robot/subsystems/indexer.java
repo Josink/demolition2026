@@ -17,11 +17,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class indexer extends SubsystemBase {
+public class Indexer extends SubsystemBase {
   /** Creates a new indexer. */
   private TalonFX indexerMotor = new TalonFX(Constants.indexerConstants.indexerMotorID, "4998Canivore");
 
-  public indexer() {
+  public Indexer() {
     applyIndexerMotorConfigs();
   }
 

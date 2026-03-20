@@ -8,15 +8,15 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.indexer;
+import frc.robot.subsystems.intake;
 import frc.robot.subsystems.Turret;
 
 public class ManualPlay extends Command {
   /** Creates a new ManualShoot. */
-  private final Indexer indexer;
+  private final indexer indexer;
   private final Turret turret;
-  private final Intake intake;
+  private final intake intake;
 
   private final CommandXboxController operatorJoystick;
   private final double shootVelocity;
@@ -27,7 +27,7 @@ public class ManualPlay extends Command {
   private final double lowIndexerVelocity;
   private final double tolerance;
   
-  public ManualPlay(Indexer indexer, Turret turret, Intake intake, CommandXboxController operatorJoystick,
+  public ManualPlay(indexer indexer, Turret turret, intake intake, CommandXboxController operatorJoystick,
                       double shootVelocity, double funnelVelocity, 
                       double indexerVelocity, double lowIndexerVelocity, double intakeVelocity,double bIntakeVelocity, 
                       double tolerance) {

@@ -29,8 +29,9 @@ public class ManualPlay extends Command {
   private final double indexerVelocity;
   private final double lowIndexerVelocity;
   private final double tolerance;
+  private double leftX;
   
-  public ManualPlay(Indexer indexer, Turret turret, Intake intake, BooleanSupplier leftTrigger, 
+  public ManualPlay(Indexer indexer, Turret turret, Intake intake, double leftX, BooleanSupplier leftTrigger, 
                     BooleanSupplier rightTrigger, BooleanSupplier leftBumper, BooleanSupplier rightBumper,
                     double shootVelocity, double funnelVelocity, double indexerVelocity, 
                     double lowIndexerVelocity, double intakeVelocity,double bIntakeVelocity, 
@@ -50,6 +51,7 @@ public class ManualPlay extends Command {
     this.intakeVelocity = intakeVelocity;
     this.bIntakeVelocity = bIntakeVelocity;
     this.tolerance = tolerance;
+    this.leftX = leftX;
     
     addRequirements(indexer, turret, intake);
   }
@@ -66,8 +68,7 @@ public class ManualPlay extends Command {
     SmartDashboard.putNumber("Funnel Velocity", turret.getFunnelVelocity());
     SmartDashboard.putNumber("Turret Position", turret.getTurretPosition());
 
-    double joyX = MathUtil.applyDeadband(operatorJoystick.getLeftX(), 0.15);
-    if (Math.abs(joyX) > 0){
+    if (Math.abs(leftX) > 0){
       turret.rotateTurret(joyX * 0.2);
     } else if (operatorJoystick.x().getAsBoolean()){
       turret.rotateToPos(0.25);

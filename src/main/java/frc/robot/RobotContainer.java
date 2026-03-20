@@ -79,6 +79,21 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        // Idle while the robot is disabled. This ensures the configured
+        // neutral mode is applied to the drive motors while disabled.
+        final var idle = new SwerveRequest.Idle();
+        RobotModeTriggers.disabled().whileTrue(
+            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+        );
+
+        DriverJoystick.rightBumper().whileTrue(
+            drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())
+        );
+        
+        DriverJoystick.leftBumper().onTrue(
+            drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
+        );
+        
         drivetrain.setDefaultCommand(
             new SwerveDrive(
                 drivetrain, 

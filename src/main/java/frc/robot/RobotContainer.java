@@ -6,6 +6,9 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Set;
+
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -13,6 +16,7 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoPlay;
@@ -79,6 +83,21 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        // Idle while the robot is disabled. This ensures the configured
+        // neutral mode is applied to the drive motors while disabled.
+        final var idle = new SwerveRequest.Idle();
+        RobotModeTriggers.disabled().whileTrue(
+            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+        );
+
+        DriverJoystick.rightBumper().whileTrue(
+            drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())
+        );
+        
+        DriverJoystick.leftBumper().onTrue(
+            drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
+        );
+        
         drivetrain.setDefaultCommand(
             new SwerveDrive(
                 drivetrain, 
@@ -92,18 +111,15 @@ public class RobotContainer {
         //OPERATPOR JOYSTICK BINDINGS
         // Toggle Auto Mode on button 7
         OperatorJoystick.button(7).onTrue(
-            Commands.runOnce(() -> {
+            Commands.defer(() -> {
                 isAutoMode = !isAutoMode;
-                SmartDashboard.putBoolean("Auto Mode Enabled", isAutoMode);
 
                 if (isAutoMode) {
-                    autoPlay.schedule();      // schedule auto command once
-                    manualPlay.cancel();      // cancel manual command if running
+                    return autoPlay;
                 } else {
-                    manualPlay.schedule();    // schedule manual command once
-                    autoPlay.cancel();        // cancel auto command if running
+                    return manualPlay;
                 }
-            })
+            }, Set.of(indexer, turret, intake))
         );
         
 

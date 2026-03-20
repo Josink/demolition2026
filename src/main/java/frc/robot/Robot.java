@@ -79,9 +79,9 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().cancelAll();
 
         // In test mode, start logging automatically
-        SignalLogger.start();
-        m_sysIdMode = true;
-        System.out.println("SignalLogger started for SysId tests");
+        // SignalLogger.start();
+        // m_sysIdMode = true;
+        // System.out.println("SignalLogger started for SysId tests");
     }
 
     @Override
@@ -89,11 +89,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testExit() {
-        if (m_sysIdMode) {
-            SignalLogger.stop();
-            m_sysIdMode = false;
-            System.out.println("SignalLogger stopped");
-        }
+        // if (m_sysIdMode) {
+        //     SignalLogger.stop();
+        //     m_sysIdMode = false;
+        //     System.out.println("SignalLogger stopped");
+        // }
     }
 
     @Override

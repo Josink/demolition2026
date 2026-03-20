@@ -51,18 +51,18 @@ public class RobotContainer {
 
     public RobotContainer() {
         NamedCommands.registerCommand("Shoot", new Shoot(indexer, turret, intake, vision, 5, 70, 40, -0.7));
-        NameCommands.registerCommand("Intake Down", new MoveIntake(intake, true));
-        NameCommands.registerCommand("Intake Up", new MoveIntake(intake, false));
+        NamedCommands.registerCommand("Intake Down", new MoveIntake(intake, true));
+        NamedCommands.registerCommand("Intake Up", new MoveIntake(intake, false));
         NamedCommands.registerCommand("Intake", new IntakeFuel(intake, indexer, 0.7, 40));
 
         manualPlay = new ManualPlay(
             indexer, turret, intake, OperatorJoystick,
-            60, 70, 70, 40, 0.7, -0.7, 2
+            80, 70, 70, 30, 0.7, -0.5, 2
         );
 
         autoPlay = new AutoPlay(
             indexer, turret, intake, vision, OperatorJoystick, 
-            2, 100, -0.7, 40, 0.7
+            2, 100, 0.7, 40, -0.7
         );
 
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -88,19 +88,20 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
+        // Toggle Auto Mode on button 7
         OperatorJoystick.button(7).onTrue(
-            turret.runOnce(() -> {
+            Commands.runOnce(() -> {
                 isAutoMode = !isAutoMode;
                 SmartDashboard.putBoolean("Auto Mode Enabled", isAutoMode);
-            })
-        );
 
-        turret.setDefaultCommand(
-            Commands.either(
-                autoPlay,
-                manualPlay,
-                () -> isAutoMode
-            )
+                if (isAutoMode) {
+                    autoPlay.schedule();      // schedule auto command once
+                    manualPlay.cancel();      // cancel manual command if running
+                } else {
+                    manualPlay.schedule();    // schedule manual command once
+                    autoPlay.cancel();        // cancel auto command if running
+                }
+            })
         );
         
 

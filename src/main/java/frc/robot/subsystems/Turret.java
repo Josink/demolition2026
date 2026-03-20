@@ -226,6 +226,7 @@ public class Turret extends SubsystemBase {
     talonconfigs.Slot0.kV = Constants.turretConstants.kv;
     talonconfigs.Slot0.kS = Constants.turretConstants.ks;
     talonconfigs.Slot0.kA = Constants.turretConstants.ka;
+    talonconfigs.TorqueCurrent.PeakReverseTorqueCurrent = 0;
 
     var motionMagicConfigs = talonconfigs.MotionMagic;
     motionMagicConfigs.MotionMagicCruiseVelocity = Constants.turretConstants.MotionMagicCruiseVelocity;
@@ -286,11 +287,11 @@ public class Turret extends SubsystemBase {
 
     MotorOutputConfigs rmotorOutputConfigs = new MotorOutputConfigs();
     rmotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
-    rmotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    rmotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     MotorOutputConfigs lmotorOutputConfigs = new MotorOutputConfigs();
     lmotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    lmotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    lmotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     lShootingMotor.getConfigurator().apply(lmotorOutputConfigs);
     funnelMotor.getConfigurator().apply(lmotorOutputConfigs); 

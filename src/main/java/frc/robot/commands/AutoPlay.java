@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Indexer;
@@ -29,7 +31,7 @@ public class AutoPlay extends Command {
   private final double bIntakeVelocity;
   
   public AutoPlay(Indexer indexer, Turret turret, Intake intake, 
-                  Vision vision, CommandXboxController operatorJoystick, 
+                  Vision vision, BooleanSupplier leftTrigger,  
                   double tolerance, double indexerVelocity, double intakeVelocity,
                   double lowIndexerVelocity, double bIntakeVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.

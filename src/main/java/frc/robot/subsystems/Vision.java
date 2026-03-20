@@ -81,8 +81,8 @@ public class Vision extends SubsystemBase {
     if (Math.abs(drivetrain.getState().Speeds.omegaRadiansPerSecond) > 3.0) return;
 
     // Use cached VecBuilder for standard deviations
-  Vector<N3> stdDevs = estimate.tagCount >= 2 ? cachedStdDev2Tags : cachedStdDev1Tag;
-  drivetrain.addVisionMeasurement(estimate.pose, estimate.timestampSeconds, stdDevs);
+    Vector<N3> stdDevs = estimate.tagCount >= 2 ? cachedStdDev2Tags : cachedStdDev1Tag;
+    drivetrain.addVisionMeasurement(estimate.pose, estimate.timestampSeconds, stdDevs);
   }
 
   public PoseEstimate getBestPoseEstimate() {

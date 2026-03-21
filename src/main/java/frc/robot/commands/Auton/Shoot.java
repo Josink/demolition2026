@@ -44,11 +44,8 @@ public class Shoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double maxShooterVelocity = 90;
-    double minShooterVelocity = 50; 
-
-    double shooterVelocity = (2 * minShooterVelocity + maxShooterVelocity);
-    double funnelVelocity = shooterVelocity * 0.8;
+    double shooterVelocity = 50;
+    double funnelVelocity = 40;
 
     turret.rotateToVelocity(shooterVelocity);
     turret.rotateFunnelToVelocity(funnelVelocity);

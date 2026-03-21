@@ -45,7 +45,7 @@ public class RobotContainer {
     public final Intake intake = new Intake();
     public final Indexer indexer = new Indexer();
 
-    //public final Vision vision = new Vision(drivetrain);
+    public final Vision vision = new Vision(drivetrain);
 
     private boolean isAutoMode = false;
     private Command manualPlay;
@@ -129,7 +129,7 @@ public class RobotContainer {
             indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
             OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
-            80, 70, 70, 30, 0.7, -0.5, 2
+            40, 30, 70, 30, 0.7, -0.5, 2
         ));
     
 

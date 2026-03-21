@@ -71,20 +71,20 @@ public class SwerveDrive extends Command {
     @Override
     public void execute(){
         //check if the deadbands need to change        
-        xVal = MathUtil.applyDeadband(-driverController.getLeftX() * m_speedChooser.getSelected(),0.05);
-        yVal = MathUtil.applyDeadband(-driverController.getLeftY() * m_speedChooser.getSelected(), 0.1);
+        xVal = MathUtil.applyDeadband(-driverController.getLeftX() * m_speedChooser.getSelected(),0.15);
+        yVal = MathUtil.applyDeadband(-driverController.getLeftY() * m_speedChooser.getSelected(), 0.15);
         rotationVal = MathUtil.applyDeadband(-driverController.getRightX() * m_speedChooser.getSelected(), 0.1);
         
         m_Request = drive.withVelocityX(slewY.calculate(yVal * MaxSpeed))
         .withVelocityY(slewX.calculate(xVal * MaxSpeed))
         .withRotationalRate(slewR.calculate(rotationVal * MaxAngularRate));
 
-        c_Request = cDrive.withVelocityX(yVal * MaxSpeed)
-        .withVelocityY(xVal * MaxSpeed)
+        c_Request = cDrive.withVelocityX(-yVal * MaxSpeed)
+        .withVelocityY(-xVal * MaxSpeed)
         .withRotationalRate(rotationVal * MaxAngularRate);
 
         //swerve.setControl(m_Request);
-        swerve.setControl(c_Request);
+        swerve.setControl(m_Request);
 
         double currentSpeed = swerve.getState().Speeds.vxMetersPerSecond;
         SmartDashboard.putNumber("Current Drive Speed (M/S)", currentSpeed);

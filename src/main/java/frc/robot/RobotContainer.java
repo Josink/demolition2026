@@ -45,7 +45,7 @@ public class RobotContainer {
     public final Intake intake = new Intake();
     public final Indexer indexer = new Indexer();
 
-    public final Vision vision = new Vision(drivetrain);
+    //public final Vision vision = new Vision(drivetrain);
 
     private boolean isAutoMode = false;
     private Command manualPlay;
@@ -66,14 +66,14 @@ public class RobotContainer {
             indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
             OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
-            30, 70, 70, 30, 0.7, -0.5, 2
+            40, 30, 70, 30, 0.7, -0.5, 2
         );
 
-        autoPlay = new AutoPlay(
-            indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
-            OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(), 
-            2, 100, 0.7, 40, -0.7
-        );
+        // autoPlay = new AutoPlay(
+        //     indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
+        //     OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(), 
+        //     2, 100, 0.7, 40, -0.7
+        // );
 
         autoChooser = AutoBuilder.buildAutoChooser();
 

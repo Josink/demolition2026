@@ -35,11 +35,12 @@ public class ManualPlay extends Command {
   private BooleanSupplier x;
   private BooleanSupplier y;
   private BooleanSupplier a;
+  private BooleanSupplier b;
   private DoubleSupplier leftX;
   
   public ManualPlay(Indexer indexer, Turret turret, Intake intake, BooleanSupplier leftTrigger, 
                       BooleanSupplier rightTrigger, BooleanSupplier leftBumper, BooleanSupplier rightBumper,
-                      BooleanSupplier x, BooleanSupplier y, BooleanSupplier a, DoubleSupplier leftX,
+                      BooleanSupplier x, BooleanSupplier y, BooleanSupplier a, BooleanSupplier b, DoubleSupplier leftX,
                       double shootVelocity, double funnelVelocity, 
                       double indexerVelocity, double lowIndexerVelocity, double intakeVelocity,double bIntakeVelocity, 
                       double tolerance) {
@@ -65,6 +66,7 @@ public class ManualPlay extends Command {
     this.x = x;
     this.y = y;
     this.a = a;
+    this.b = b;
     
     addRequirements(indexer, turret, intake);
   }
@@ -82,27 +84,31 @@ public class ManualPlay extends Command {
     SmartDashboard.putNumber("Turret Position", turret.getTurretPosition());
 
     double joyX = MathUtil.applyDeadband(leftX.getAsDouble(), 0.05);
-    if (Math.abs(joyX) > 0){
+
+    if (Math.abs(joyX) > 0.05) {
       turret.rotateTurret(joyX * 0.2);
-    } else if (x.getAsBoolean()){
-      turret.rotateToPos(0.25);
-    }  else if (y.getAsBoolean()){
-      turret.rotateToPos(0.5);
-    } else if (a.getAsBoolean()){
-      turret.rotateToPos(-0.25);
-    }
-      else {
-      turret.stopTurret();
+    } else {
+      if (x.getAsBoolean()) {
+        turret.rotateToPos(-0.25);
+      } else if (y.getAsBoolean()) {
+        turret.rotateToPos(0);
+      } else if (a.getAsBoolean()) {
+        turret.rotateToPos(-0.5);
+      } else if(b.getAsBoolean()){
+        turret.rotateToPos(0.25);
+      }else {
+        turret.stopTurret();
+      }
     }
 
     if (rightTrigger.getAsBoolean()) {
       turret.rotateToVelocity(shootVelocity);
-      turret.rotateFunnelToVelocity(funnelVelocity);
       indexer.rotateToVelocity(lowIndexerVelocity);
       intake.rotateToVelocity(bIntakeVelocity);
 
-      if(turret.shooterAtVelocity(shootVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
+      if(turret.shooterAtVelocity(shootVelocity, tolerance)){
         indexer.rotateToVelocity(indexerVelocity);
+        turret.rotateFunnelToVelocity(funnelVelocity);
         intake.rotateToVelocity(bIntakeVelocity);
       }
     } else if(leftTrigger.getAsBoolean()){

@@ -69,8 +69,10 @@ public class AutoPlay extends Command {
     double shooterVelocity = (2 * minShooterVelocity + maxShooterVelocity);
     double funnelVelocity = shooterVelocity * 0.8;
 
-    double turretAngle = vision.getAngleToHub(shooterVelocity).in(Degrees);
-    turret.setTurretAngleDegrees(turretAngle);
+    vision.getAngleToHub(shooterVelocity).ifPresent(angle -> {
+        double turretAngle = angle.in(Degrees);
+        turret.setTurretAngleDegrees(turretAngle); // uncomment when ready
+    });
 
     if(rightTrigger.getAsBoolean()) {
       turret.rotateToVelocity(shooterVelocity);

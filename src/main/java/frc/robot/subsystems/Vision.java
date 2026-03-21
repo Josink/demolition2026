@@ -129,9 +129,9 @@ public class Vision extends SubsystemBase {
     return Meters.of(distanceToHub);
   }
 
-  public Angle getAngleToHub(double shotSpeed) {
+  public Optional<Angle> getAngleToHub(double shotSpeed) {
     PoseEstimate est = getBestPoseEstimate();
-    if (est == null) return null;
+    if (est == null) return Optional.empty();
 
     Pose2d robotPose = est.pose;
 
@@ -149,7 +149,7 @@ public class Vision extends SubsystemBase {
 
     double angle = Math.toDegrees(Math.atan2(dy, dx));
 
-    return Degree.of(angle);
+    return Optional.of(Degree.of(angle));
   }
 
   public double getShotTimeSeconds(double shotSpeed) {

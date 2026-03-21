@@ -55,17 +55,18 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        NamedCommands.registerCommand("Shoot", new Shoot(indexer, turret, intake, vision, 5, 70, 40, -0.7));
+        NamedCommands.registerCommand("Shoot", new Shoot(indexer, turret, intake, 5, 70, 40, -0.7));
         NamedCommands.registerCommand("Intake Down", new MoveIntake(intake, true));
         NamedCommands.registerCommand("Intake Up", new MoveIntake(intake, false));
         NamedCommands.registerCommand("Intake", new IntakeFuel(intake, indexer, 0.7, 40));
-        NamedCommands.registerCommand("Rotate Turret", new RotateTurret(turret, 0.25));
+        NamedCommands.registerCommand("Rotate Turret From Left", new RotateTurret(turret, -0.25));
+        NamedCommands.registerCommand("Rotate Turret From Right", new RotateTurret(turret, 0.25));
 
         manualPlay = new ManualPlay(
             indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
-            OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick::getLeftX,
-            80, 70, 70, 30, 0.7, -0.5, 2
+            OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
+            30, 70, 70, 30, 0.7, -0.5, 2
         );
 
         autoPlay = new AutoPlay(
@@ -113,19 +114,24 @@ public class RobotContainer {
 
         //OPERATPOR JOYSTICK BINDINGS
         //Toggle Auto Mode on button 7
-        OperatorJoystick.button(7).onTrue(
-            Commands.defer(() -> {
-                isAutoMode = !isAutoMode;
+        // OperatorJoystick.button(7).onTrue(
+        //     Commands.defer(() -> {
+        //         isAutoMode = !isAutoMode;
 
-                if (isAutoMode) {
-                    return autoPlay;
-                } else {
-                    return manualPlay;
-                }
-            }, Set.of(indexer, turret, intake))
-        );
-        
-        
+        //         if (isAutoMode) {
+        //             return autoPlay;
+        //         } else {
+        //             return manualPlay;
+        //         }
+        //     }, Set.of(indexer, turret, intake))
+        // );
+        turret.setDefaultCommand(new ManualPlay(
+            indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
+            OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
+            OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
+            80, 70, 70, 30, 0.7, -0.5, 2
+        ));
+    
 
         // indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
         //     OperatorJoystick.rightTrigger(), //index

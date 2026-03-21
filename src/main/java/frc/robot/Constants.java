@@ -15,8 +15,9 @@ public class Constants {
         public static final int TurretEncoderID = 54;
 
         public static final int SensorToMechanismRatio = 48;
-        public static final double ForwardSoftLimitThreshold = 0.53; //0
-        public static final double ReverseSoftLimitThreshold = -0.53; //no more than one half rotation either way
+        public static final double ForwardSoftLimitThreshold = 0.3; //0
+        public static final double ReverseSoftLimitThreshold = -0.55; //no more than one half rotation either way
+        public static final double encoderOffset = -0.6533203125;
 
         //slot 0 PID values TURRET MOTOR
         public static final double kP = 43;

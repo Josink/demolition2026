@@ -226,7 +226,6 @@ public class Turret extends SubsystemBase {
     talonconfigs.Slot0.kV = Constants.turretConstants.kv;
     talonconfigs.Slot0.kS = Constants.turretConstants.ks;
     talonconfigs.Slot0.kA = Constants.turretConstants.ka;
-    talonconfigs.TorqueCurrent.PeakReverseTorqueCurrent = 0;
 
     var motionMagicConfigs = talonconfigs.MotionMagic;
     motionMagicConfigs.MotionMagicCruiseVelocity = Constants.turretConstants.MotionMagicCruiseVelocity;
@@ -236,6 +235,7 @@ public class Turret extends SubsystemBase {
     talonconfigs.Feedback.FeedbackRemoteSensorID = Constants.turretConstants.TurretEncoderID;
     talonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     talonconfigs.Feedback.SensorToMechanismRatio = Constants.turretConstants.SensorToMechanismRatio;
+    talonconfigs.Feedback.FeedbackRotorOffset = Constants.turretConstants.encoderOffset;
    
     turretMotor.getConfigurator().apply(talonconfigs);
 
@@ -263,6 +263,8 @@ public class Turret extends SubsystemBase {
     motionMagicConfigs.MotionMagicJerk = Constants.turretConstants.SMotionMagicJerk;
 
     talonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+
+    talonconfigs.TorqueCurrent.PeakReverseTorqueCurrent = 0;
    
     lShootingMotor.getConfigurator().apply(talonconfigs);
     rShootingMotor.getConfigurator().apply(talonconfigs);

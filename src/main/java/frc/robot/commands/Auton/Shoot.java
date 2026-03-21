@@ -4,13 +4,11 @@
 
 package frc.robot.commands.Auton;
 
-import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Shoot extends Command {
@@ -18,7 +16,6 @@ public class Shoot extends Command {
   private final Indexer indexer;
   private final Turret turret;
   private final Intake intake;
-  private final Vision vision;
 
   private final double tolerance;
   private final double indexerVelocity;
@@ -26,19 +23,18 @@ public class Shoot extends Command {
   private final double bIntakeVelocity;
   
   public Shoot(Indexer indexer, Turret turret, Intake intake, 
-                  Vision vision, double tolerance, double indexerVelocity,
+                  double tolerance, double indexerVelocity,
                   double lowIndexerVelocity, double bIntakeVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.indexer = indexer;
     this.turret = turret;
     this.intake = intake;
-    this.vision = vision;
     this.tolerance = tolerance;
     this.indexerVelocity = indexerVelocity;
     this.lowIndexerVelocity = lowIndexerVelocity;
     this.bIntakeVelocity = bIntakeVelocity;
     
-    addRequirements(indexer, turret, intake, vision);
+    addRequirements(indexer, turret, intake);
   }
 
   // Called when the command is initially scheduled.
@@ -53,9 +49,6 @@ public class Shoot extends Command {
 
     double shooterVelocity = (2 * minShooterVelocity + maxShooterVelocity);
     double funnelVelocity = shooterVelocity * 0.8;
-
-    double turretAngle = vision.getAngleToHub(shooterVelocity).in(Degrees);
-    turret.setTurretAngleDegrees(turretAngle);
 
     turret.rotateToVelocity(shooterVelocity);
     turret.rotateFunnelToVelocity(funnelVelocity);

@@ -45,7 +45,7 @@ public class RobotContainer {
     public final Intake intake = new Intake();
     public final Indexer indexer = new Indexer();
 
-    public final Vision vision = new Vision(drivetrain);
+    //public final Vision vision = new Vision(drivetrain);
 
     private boolean isAutoMode = false;
     private Command manualPlay;
@@ -59,8 +59,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Down", new MoveIntake(intake, true));
         NamedCommands.registerCommand("Intake Up", new MoveIntake(intake, false));
         NamedCommands.registerCommand("Intake", new IntakeFuel(intake, indexer, 0.7, 40));
-        NamedCommands.registerCommand("Rotate Turret From Left", new RotateTurret(turret, -0.25));
-        NamedCommands.registerCommand("Rotate Turret From Right", new RotateTurret(turret, 0.25));
+        NamedCommands.registerCommand("Rotate Turret From Left", new RotateTurret(turret, -0.125));
+        NamedCommands.registerCommand("Rotate Turret From Right", new RotateTurret(turret, 0.125));
 
         manualPlay = new ManualPlay(
             indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
@@ -93,14 +93,6 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
-
-        DriverJoystick.rightBumper().whileTrue(
-            drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())
-        );
-        
-        DriverJoystick.leftBumper().onTrue(
-            drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
-        );
         
         drivetrain.setDefaultCommand(
             new SwerveDrive(
@@ -129,7 +121,7 @@ public class RobotContainer {
             indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
             OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
-            40, 30, 70, 30, 0.7, -0.5, 2
+            65, 55, 70, 30, 0.7, -0.5, 2
         ));
     
 

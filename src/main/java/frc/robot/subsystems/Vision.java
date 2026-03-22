@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Optional;
@@ -18,6 +19,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -126,7 +128,7 @@ public class Vision extends SubsystemBase {
     if (est == null) return null;
 
     double distanceToHub = est.pose.getTranslation().getDistance(hubAprilTag.getTranslation());
-    return Meters.of(distanceToHub);
+    return Inches.of(distanceToHub);
   }
 
   public Optional<Angle> getAngleToHub(double shotSpeed) {

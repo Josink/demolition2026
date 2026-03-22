@@ -31,6 +31,9 @@ public class AutoPlay extends Command {
   private BooleanSupplier rightTrigger;
   private BooleanSupplier leftBumper;
   private BooleanSupplier rightBumper;
+
+  private double shooterVelocity;
+  private double funnelVelocity;
   
   public AutoPlay(Indexer indexer, Turret turret, Intake intake, 
                   Vision vision, BooleanSupplier leftTrigger, 
@@ -64,14 +67,14 @@ public class AutoPlay extends Command {
   @Override
   public void execute() {
     double maxShooterVelocity = 90;
-    double minShooterVelocity = 50; 
+    double minShooterVelocity = 55; 
 
-    double shooterVelocity = (2 * minShooterVelocity + maxShooterVelocity);
-    double funnelVelocity = shooterVelocity * 0.8;
+    shooterVelocity = (2 * minShooterVelocity + maxShooterVelocity);
+    funnelVelocity = shooterVelocity * 0.8;
 
     vision.getAngleToHub(shooterVelocity).ifPresent(angle -> {
         double turretAngle = angle.in(Degrees);
-        turret.setTurretAngleDegrees(turretAngle); // uncomment when ready
+        turret.setTurretAngleDegrees(turretAngle); 
     });
 
     if(rightTrigger.getAsBoolean()) {

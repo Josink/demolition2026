@@ -8,12 +8,10 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -31,22 +29,14 @@ public class SwerveDrive extends Command {
     // Use open-loop control for drive motors
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.FieldCentric cDrive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.Velocity);
- 
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-
     private CommandXboxController driverController;
 
     private double rotationVal, xVal, yVal;
-    private SlewRateLimiter slewR, slewX, slewY;
 
     public SwerveDrive(CommandSwerveDrivetrain swerve, CommandXboxController driver){
         this.swerve = swerve;
         this.driverController = driver;
         addRequirements(swerve);
-
-        slewR = new SlewRateLimiter(3);
-        slewX = new SlewRateLimiter(3);
-        slewY = new SlewRateLimiter(4);
 
         m_speedChooser = new SendableChooser<Double>();
         m_speedChooser.addOption("100%", 1.0);
@@ -61,6 +51,9 @@ public class SwerveDrive extends Command {
         m_speedChooser.addOption("20%", 0.2);
         SmartDashboard.putData("Speed Percent", m_speedChooser);
 
+        driverController.rightBumper().onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
+        driverController.leftBumper().onTrue(swerve.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
+
     }
 
     @Override
@@ -73,14 +66,14 @@ public class SwerveDrive extends Command {
         //check if the deadbands need to change        
         xVal = MathUtil.applyDeadband(-driverController.getLeftX() * m_speedChooser.getSelected(),0.15);
         yVal = MathUtil.applyDeadband(-driverController.getLeftY() * m_speedChooser.getSelected(), 0.15);
-        rotationVal = MathUtil.applyDeadband(-driverController.getRightX() * m_speedChooser.getSelected(), 0.1);
+        rotationVal = MathUtil.applyDeadband(-driverController.getRightX() * m_speedChooser.getSelected(), 0.15);
         
-        m_Request = drive.withVelocityX(slewY.calculate(yVal * MaxSpeed))
-        .withVelocityY(slewX.calculate(xVal * MaxSpeed))
-        .withRotationalRate(slewR.calculate(rotationVal * MaxAngularRate));
+        m_Request = drive.withVelocityX(yVal * MaxSpeed)
+        .withVelocityY(xVal * MaxSpeed)
+        .withRotationalRate(rotationVal * MaxAngularRate);
 
-        c_Request = cDrive.withVelocityX(-yVal * MaxSpeed)
-        .withVelocityY(-xVal * MaxSpeed)
+        c_Request = cDrive.withVelocityX(yVal * MaxSpeed)
+        .withVelocityY(xVal * MaxSpeed)
         .withRotationalRate(rotationVal * MaxAngularRate);
 
         //swerve.setControl(m_Request);
@@ -92,7 +85,7 @@ public class SwerveDrive extends Command {
 
     @Override
     public void end(boolean interrupted) {}
-
+                                                                                                                                                                                      
     @Override
     public boolean isFinished() {
         return false;

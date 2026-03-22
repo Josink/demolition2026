@@ -51,7 +51,7 @@ public class SwerveDrive extends Command {
         m_speedChooser.addOption("20%", 0.2);
         SmartDashboard.putData("Speed Percent", m_speedChooser);
 
-        driverController.rightBumper().onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
+        driverController.rightBumper().and(driverController.leftBumper()).whileTrue(swerve.run(() -> swerve.seedFieldCentric()));
         driverController.leftBumper().onTrue(swerve.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
 
     }

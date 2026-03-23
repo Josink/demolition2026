@@ -45,7 +45,7 @@ public class RobotContainer {
     public final Intake intake = new Intake();
     public final Indexer indexer = new Indexer();
 
-    //public final Vision vision = new Vision(drivetrain);
+    public final Vision vision = new Vision(drivetrain);
 
     private boolean isAutoMode = false;
     private Command manualPlay;

@@ -37,14 +37,43 @@ public class Turret extends SubsystemBase {
   private TalonFX rShootingMotor = new TalonFX(Constants.turretConstants.rShootingMotorID,"4998Canivore");
   private TalonFX funnelMotor = new TalonFX(Constants.turretConstants.funnelMotorID, "4998Canivore");
 
-  private final SysIdRoutine shooterSysId;
-  private final SysIdRoutine funnelSysId;
-
   private final MotionMagicTorqueCurrentFOC positionRequest = new MotionMagicTorqueCurrentFOC(0);
   private final MotionMagicVelocityTorqueCurrentFOC shooterVelocityRequest = new MotionMagicVelocityTorqueCurrentFOC(0);
 
   final DutyCycleOut rotate = new DutyCycleOut(0);
 
+  private final SysIdRoutine s_sysIdRoutine =
+      new SysIdRoutine(
+          new SysIdRoutine.Config(
+              null,         // Use default ramp rate (1 V/s)
+              Volts.of(4), // Reduce dynamic voltage to 4 to prevent brownout
+              null,          // Use default timeout (10 s)
+                               // Log state with Phoenix SignalLogger class
+              state -> SignalLogger.writeString("Shooter state", state.toString())
+          ),
+          new SysIdRoutine.Mechanism(
+              volts -> rShootingMotor.setControl(m_sysIdControl.withOutput(volts)),
+              null,
+              this
+          )
+      );
+
+  private final SysIdRoutine f_sysIdRoutine =
+      new SysIdRoutine(
+          new SysIdRoutine.Config(
+              null,         // Use default ramp rate (1 V/s)
+              Volts.of(4), // Reduce dynamic voltage to 4 to prevent brownout
+              null,          // Use default timeout (10 s)
+                               // Log state with Phoenix SignalLogger class
+              state -> SignalLogger.writeString("Funnel state", state.toString())
+          ),
+          new SysIdRoutine.Mechanism(
+              volts -> funnelMotor.setControl(m_sysIdControl.withOutput(volts)),
+              null,
+              this
+          )
+      );
+  
   public Turret() {
     applyTurretMotorConfigs();
     applyShootingMotorConfigs();
@@ -148,67 +177,37 @@ public class Turret extends SubsystemBase {
     }
   }
 
-  public SysIdRoutine createFunnelSysId(){
-    SysIdRoutine.Config config = new SysIdRoutine.Config();
-
-    SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
-      volts -> funnelMotor.setControl(new VoltageOut(volts.in(Volts))),
-      log -> log.motor("funnelMotor")
-          .voltage(Volts.of(funnelMotor.getMotorVoltage().getValueAsDouble()))
-          .angularVelocity(funnelMotor.getVelocity().getValue())
-          .angularPosition(funnelMotor.getPosition().getValue()),
-      this
-        );
-
-    return new SysIdRoutine(config, mechanism);
-  }
-
-  public SysIdRoutine createShooterSysId(){
-    SysIdRoutine.Config config = new SysIdRoutine.Config();
-
-    SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
-      volts -> rShootingMotor.setControl(new VoltageOut(volts.in(Volts))),
-      log -> log.motor("rShootingMotor")
-          .voltage(Volts.of(rShootingMotor.getMotorVoltage().getValueAsDouble()))
-          .angularVelocity(rShootingMotor.getVelocity().getValue())
-          .angularPosition(rShootingMotor.getPosition().getValue()),
-      this
-        );
-
-    return new SysIdRoutine(config, mechanism);
-  }
-
   public Command sysIdFunnelQuasistaticForward() {
-    return funnelSysId.quasistatic(SysIdRoutine.Direction.kForward);
+    return f_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
   }
 
   public Command sysIdFunnelQuasistaticReverse() {
-    return funnelSysId.quasistatic(SysIdRoutine.Direction.kReverse);
+    return f_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
   }
 
   public Command sysIdFunnelDynamicForward() {
-    return funnelSysId.dynamic(SysIdRoutine.Direction.kForward);
+    return f_sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
   }
 
   public Command sysIdFunnelDynamicReverse() {
-    return funnelSysId.dynamic(SysIdRoutine.Direction.kReverse);
+    return f_sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
   }
 
   
   public Command sysIdQuasistaticForward() {
-    return shooterSysId.quasistatic(SysIdRoutine.Direction.kForward);
+    return s_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
   }
 
   public Command sysIdQuasistaticReverse() {
-    return shooterSysId.quasistatic(SysIdRoutine.Direction.kReverse);
+    return s_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
   }
 
   public Command sysIdDynamicForward() {
-    return shooterSysId.dynamic(SysIdRoutine.Direction.kForward);
+    return s_sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
   }
 
   public Command sysIdDynamicReverse() {
-    return shooterSysId.dynamic(SysIdRoutine.Direction.kReverse);
+    return s_sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
   }
 
   private void applyTurretMotorConfigs(){

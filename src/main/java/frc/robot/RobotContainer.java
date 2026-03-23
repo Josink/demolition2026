@@ -123,20 +123,6 @@ public class RobotContainer {
             OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
             65, 55, 70, 30, 0.7, -0.5, 2
         ));
-    
-
-        // indexer.setDefaultCommand(indexer.run(()->indexer.manualControl(
-        //     OperatorJoystick.rightTrigger(), //index
-        //     100))); //speed
-
-        // turret.setDefaultCommand(turret.run(()->turret.manualControl(
-        //     (OperatorJoystick.getLeftX() >= 0.15 || OperatorJoystick.getLeftX() <= -0.15), //rotate
-        //     MathUtil.applyDeadband(OperatorJoystick.getLeftX()*0.2, 0.1), // speed
-        //     OperatorJoystick.a(), //rotatetopos
-        //     0.25, //position
-        //     OperatorJoystick.rightTrigger(), //shoot
-        //     100, //shoot velocity
-        //     70))); //funnel velocity
 
         //SysId routines for shooter
         // OperatorJoystick.a().whileTrue(turret.sysIdQuasistaticForward());

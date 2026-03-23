@@ -74,17 +74,17 @@ public class AutoPlay extends Command {
 
     vision.getAngleToHub(shooterVelocity).ifPresent(angle -> {
         double turretAngle = angle.in(Degrees);
-        turret.setTurretAngleDegrees(turretAngle); 
+        turret.setTurretAngleDegrees(-turretAngle); 
     });
 
     if(rightTrigger.getAsBoolean()) {
       turret.rotateToVelocity(shooterVelocity);
-      turret.rotateFunnelToVelocity(funnelVelocity);
       indexer.rotateToVelocity(lowIndexerVelocity);
       intake.rotateToVelocity(bIntakeVelocity);
 
       if(turret.shooterAtVelocity(shooterVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
         indexer.rotateToVelocity(indexerVelocity);
+        turret.rotateFunnelToVelocity(funnelVelocity);
         intake.rotateToVelocity(bIntakeVelocity);
       }
     } else if(leftTrigger.getAsBoolean()){

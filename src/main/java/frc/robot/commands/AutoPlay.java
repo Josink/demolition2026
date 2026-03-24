@@ -106,7 +106,13 @@ public class AutoPlay extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    turret.stopShooter(0);
+    turret.stopFunnel(0);
+    intake.stopIntake();
+    indexer.stopIndexer();
+    turret.stopTurret();
+  }
 
   @Override
   public boolean isFinished() {

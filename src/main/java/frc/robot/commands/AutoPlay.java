@@ -78,15 +78,7 @@ public class AutoPlay extends Command {
     });
 
     if(rightTrigger.getAsBoolean()) {
-      turret.rotateToVelocity(shooterVelocity);
-      indexer.rotateToVelocity(lowIndexerVelocity);
-      intake.rotateToVelocity(bIntakeVelocity);
-
-      if(turret.shooterAtVelocity(shooterVelocity, tolerance) && turret.funnelAtVelocity(funnelVelocity, tolerance)){
-        indexer.rotateToVelocity(indexerVelocity);
-        turret.rotateFunnelToVelocity(funnelVelocity);
-        intake.rotateToVelocity(bIntakeVelocity);
-      }
+      runShooterSequence();
     } else if(leftTrigger.getAsBoolean()){
       intake.rotateToVelocity(intakeVelocity);
     } else {
@@ -104,6 +96,28 @@ public class AutoPlay extends Command {
       intake.off();
     }
   }
+
+  public void runShooterSequence(
+    double shooterVel,
+    double funnelVel,
+    double lowIndexerVel,
+    double indexerVel,
+    double intakeVel,
+    double tolerance,
+    Indexer indexer,
+    Intake intake
+) {
+    rotateToVelocity(shooterVel);
+    indexer.rotateToVelocity(lowIndexerVel);
+    intake.rotateToVelocity(intakeVel);
+
+    if (shooterAtVelocity(shooterVel, tolerance) &&
+        funnelAtVelocity(funnelVel, tolerance)) {
+
+        indexer.rotateToVelocity(indexerVel);
+        rotateFunnelToVelocity(funnelVel);
+    }
+}
 
   @Override
   public void end(boolean interrupted) {

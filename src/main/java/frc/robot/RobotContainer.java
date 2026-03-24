@@ -63,17 +63,17 @@ public class RobotContainer {
         NamedCommands.registerCommand("Rotate Turret From Right", new RotateTurret(turret, 0.125));
 
         manualPlay = new ManualPlay(
-            indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
+             indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
             OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
-            40, 30, 70, 30, 0.7, -0.5, 2
+            65, 55, 70, 30, 0.7, -0.5, 2
         );
 
-        // autoPlay = new AutoPlay(
-        //     indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
-        //     OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(), 
-        //     2, 100, 0.7, 40, -0.7
-        // );
+        autoPlay = new AutoPlay(
+            indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
+            OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(), 
+            2, 100, 0.7, 40, -0.7
+        );
 
         autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -117,12 +117,7 @@ public class RobotContainer {
         //         }
         //     }, Set.of(indexer, turret, intake))
         // );
-        turret.setDefaultCommand(new ManualPlay(
-            indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
-            OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
-            OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
-            65, 55, 70, 30, 0.7, -0.5, 2
-        ));
+        turret.setDefaultCommand(manualPlay);
 
         //SysId routines for shooter
         // OperatorJoystick.a().whileTrue(turret.sysIdQuasistaticForward());

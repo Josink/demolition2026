@@ -105,19 +105,8 @@ public class RobotContainer {
 
 
         //OPERATPOR JOYSTICK BINDINGS
-        //Toggle Auto Mode on button 7
-        // OperatorJoystick.button(7).onTrue(
-        //     Commands.defer(() -> {
-        //         isAutoMode = !isAutoMode;
-
-        //         if (isAutoMode) {
-        //             return autoPlay;
-        //         } else {
-        //             return manualPlay;
-        //         }
-        //     }, Set.of(indexer, turret, intake))
-        // );
         turret.setDefaultCommand(manualPlay);
+        OperatorJoystick.button(7).toggleOnTrue(autoPlay);
 
         //SysId routines for shooter
         // OperatorJoystick.a().whileTrue(turret.sysIdQuasistaticForward());

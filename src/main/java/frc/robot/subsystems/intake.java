@@ -4,9 +4,8 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -14,31 +13,27 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new intake. */
   private TalonFX intakeMotor = new TalonFX(Constants.intakeConstants.intakeMotorID, "4998Canivore");
+  private TalonFX intakeRotateMotor = new TalonFX(Constants.intakeConstants.intakeRotateMotorID, "4998Canivore");
 
-  private final Compressor compressor = new Compressor(2, PneumaticsModuleType.REVPH);
-  private final DoubleSolenoid intakeSolenoid = new DoubleSolenoid(2,PneumaticsModuleType.REVPH, 0, 1);
   private DutyCycleOut intake = new DutyCycleOut(0);
+  private DutyCycleOut intakeRotate = new DutyCycleOut(0);
 
   public Intake() {
     applyIntakeMotorConfigs();
-    compressor.enableDigital();
-    //setIntakeSolenoid(true, false);
+    applyIntakeRotateMotorConfigs();
+    intakeRotateMotor.setPosition(0);
+
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Intake", intakeSolenoid.equals(DoubleSolenoid.Value.kReverse));
   }
 
   public void suck(double speed){
@@ -49,36 +44,26 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(0);
   }
 
-  public void up(){
-    intakeSolenoid.set(DoubleSolenoid.Value.kForward);
-  }
-
-  public void down(){
-    intakeSolenoid.set(DoubleSolenoid.Value.kReverse);
-  }
-
-  public void off(){
-    intakeSolenoid.set(DoubleSolenoid.Value.kOff);
-  }
-
-  public void setIntakeSolenoid(boolean down, boolean up){
-    if(down){
-      intakeSolenoid.set(DoubleSolenoid.Value.kForward);
-    } else if (up){
-      intakeSolenoid.set(DoubleSolenoid.Value.kReverse);
-    } else{
-      intakeSolenoid.set(DoubleSolenoid.Value.kOff);
-    }
-  }
-
   public void rotateToVelocity(double velocity){
     intake.Output = velocity;
     intake.EnableFOC = true;
     intakeMotor.setControl(intake);
   }
 
-  public void manualControl(BooleanSupplier down, BooleanSupplier up){
-    setIntakeSolenoid(down.getAsBoolean(), up.getAsBoolean());
+  public void up(double speed){
+    intakeRotate.Output = speed;
+    intakeRotate.EnableFOC = true;
+    intakeRotateMotor.setControl(intakeRotate);
+  }
+
+  public void down(double speed){
+    intakeRotate.Output = speed;
+    intakeRotate.EnableFOC = true;
+    intakeRotateMotor.setControl(intakeRotate);
+  }
+
+  public void off(){
+    intakeRotateMotor.set(0);
   }
 
   private void applyIntakeMotorConfigs(){
@@ -100,6 +85,28 @@ public class Intake extends SubsystemBase {
     talonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
     intakeMotor.getConfigurator().apply(talonconfigs);
+
+    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+
+    intakeMotor.getConfigurator().apply(motorOutputConfigs);
+  }
+
+  private void applyIntakeRotateMotorConfigs(){
+    TalonFXConfiguration talonconfigs = new TalonFXConfiguration();
+
+    SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonconfigs.SoftwareLimitSwitch;
+    softwareLimitSwitchConfigs.ForwardSoftLimitEnable = false;
+    softwareLimitSwitchConfigs.ForwardSoftLimitThreshold = Constants.intakeConstants.ForwardSoftLimitThreshold;
+    softwareLimitSwitchConfigs.ReverseSoftLimitEnable = false;
+    softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = Constants.intakeConstants.ReverseSoftLimitThreshold;
+
+    talonconfigs.Feedback.FeedbackRemoteSensorID = intakeRotateMotor.getDeviceID();
+    talonconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    talonconfigs.Feedback.SensorToMechanismRatio = Constants.intakeConstants.intakeRotateMotorSensorToMechanismRatio;
+
+    intakeRotateMotor.getConfigurator().apply(talonconfigs);
 
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
     motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;

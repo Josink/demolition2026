@@ -23,7 +23,6 @@ public class ManualPlay extends Command {
   private final double shootVelocity;
   private final double funnelVelocity;
   private final double intakeVelocity;
-  private final double bIntakeVelocity;
   private final double indexerVelocity;
   private final double lowIndexerVelocity;
   private final double tolerance;
@@ -37,13 +36,15 @@ public class ManualPlay extends Command {
   private BooleanSupplier a;
   private BooleanSupplier b;
   private DoubleSupplier leftX;
+
+  private double intakeRotateVelocity;
   
   public ManualPlay(Indexer indexer, Turret turret, Intake intake, BooleanSupplier leftTrigger, 
                       BooleanSupplier rightTrigger, BooleanSupplier leftBumper, BooleanSupplier rightBumper,
                       BooleanSupplier x, BooleanSupplier y, BooleanSupplier a, BooleanSupplier b, DoubleSupplier leftX,
                       double shootVelocity, double funnelVelocity, 
-                      double indexerVelocity, double lowIndexerVelocity, double intakeVelocity,double bIntakeVelocity, 
-                      double tolerance) {
+                      double indexerVelocity, double lowIndexerVelocity, double intakeVelocity,
+                      double tolerance, double intakeRotateVelocity) {
     this.indexer = indexer;
     this.turret = turret;
     this.intake = intake;
@@ -53,8 +54,8 @@ public class ManualPlay extends Command {
     this.indexerVelocity = indexerVelocity;
     this.lowIndexerVelocity = lowIndexerVelocity;
     this.intakeVelocity = intakeVelocity;
-    this.bIntakeVelocity = bIntakeVelocity;
     this.tolerance = tolerance;
+    this.intakeRotateVelocity = intakeRotateVelocity;
 
     this.leftTrigger = leftTrigger;
     this.rightTrigger = rightTrigger;
@@ -102,7 +103,8 @@ public class ManualPlay extends Command {
     }
 
     if (rightTrigger.getAsBoolean()) {
-      runShooterSequence();
+      runShooterSequence(shootVelocity, funnelVelocity, lowIndexerVelocity,
+      indexerVelocity, intakeVelocity, tolerance, indexer, intake);
     } else if(leftTrigger.getAsBoolean()){
       intake.rotateToVelocity(intakeVelocity);
     }else{
@@ -113,9 +115,9 @@ public class ManualPlay extends Command {
     }
 
     if(leftBumper.getAsBoolean()){
-      intake.down();
+      intake.down(intakeRotateVelocity);
     } else if (rightBumper.getAsBoolean()){
-      intake.up();
+      intake.up(-intakeRotateVelocity);
     } else{
       intake.off();
     }
@@ -131,15 +133,15 @@ public class ManualPlay extends Command {
     Indexer indexer,
     Intake intake
 ) {
-    rotateToVelocity(shooterVel);
+    turret.rotateToVelocity(shooterVel);
     indexer.rotateToVelocity(lowIndexerVel);
     intake.rotateToVelocity(intakeVel);
 
-    if (shooterAtVelocity(shooterVel, tolerance) &&
-        funnelAtVelocity(funnelVel, tolerance)) {
+    if (turret.shooterAtVelocity(shooterVel, tolerance) &&
+        turret.funnelAtVelocity(funnelVel, tolerance)) {
 
         indexer.rotateToVelocity(indexerVel);
-        rotateFunnelToVelocity(funnelVel);
+        turret.rotateFunnelToVelocity(funnelVel);
     }
 }
 

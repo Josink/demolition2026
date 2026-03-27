@@ -26,7 +26,6 @@ public class AutoPlay extends Command {
   private final double indexerVelocity;
   private final double intakeVelocity;
   private final double lowIndexerVelocity;
-  private final double bIntakeVelocity;
   private BooleanSupplier leftTrigger;
   private BooleanSupplier rightTrigger;
   private BooleanSupplier leftBumper;
@@ -34,12 +33,14 @@ public class AutoPlay extends Command {
 
   private double shooterVelocity;
   private double funnelVelocity;
+
+  private double intakeRotateVelocity;
   
   public AutoPlay(Indexer indexer, Turret turret, Intake intake, 
                   Vision vision, BooleanSupplier leftTrigger, 
-                      BooleanSupplier rightTrigger, BooleanSupplier leftBumper, BooleanSupplier rightBumper, 
+                  BooleanSupplier rightTrigger, BooleanSupplier leftBumper, BooleanSupplier rightBumper, 
                   double tolerance, double indexerVelocity, double intakeVelocity,
-                  double lowIndexerVelocity, double bIntakeVelocity) {
+                  double lowIndexerVelocity, double intakeRotateVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.indexer = indexer;
     this.turret = turret;
@@ -49,7 +50,7 @@ public class AutoPlay extends Command {
     this.indexerVelocity = indexerVelocity;
     this.intakeVelocity = intakeVelocity;
     this.lowIndexerVelocity = lowIndexerVelocity;
-    this.bIntakeVelocity = bIntakeVelocity;
+    this.intakeRotateVelocity = intakeRotateVelocity;
 
     this.leftTrigger = leftTrigger;
     this.rightTrigger = rightTrigger;
@@ -78,7 +79,8 @@ public class AutoPlay extends Command {
     });
 
     if(rightTrigger.getAsBoolean()) {
-      runShooterSequence();
+      runShooterSequence(shooterVelocity, funnelVelocity, lowIndexerVelocity,
+      indexerVelocity, intakeVelocity, tolerance, indexer, intake);
     } else if(leftTrigger.getAsBoolean()){
       intake.rotateToVelocity(intakeVelocity);
     } else {
@@ -89,9 +91,9 @@ public class AutoPlay extends Command {
     }
 
     if(leftBumper.getAsBoolean()){
-      intake.down();
-    } else if (rightBumper.getAsBoolean()){
-      intake.up();
+      intake.down(intakeRotateVelocity);
+    } else if(rightBumper.getAsBoolean()){
+      intake.up(-intakeRotateVelocity);
     } else{
       intake.off();
     }
@@ -107,15 +109,15 @@ public class AutoPlay extends Command {
     Indexer indexer,
     Intake intake
 ) {
-    rotateToVelocity(shooterVel);
+    turret.rotateToVelocity(shooterVel);
     indexer.rotateToVelocity(lowIndexerVel);
     intake.rotateToVelocity(intakeVel);
 
-    if (shooterAtVelocity(shooterVel, tolerance) &&
-        funnelAtVelocity(funnelVel, tolerance)) {
+    if (turret.shooterAtVelocity(shooterVel, tolerance) &&
+        turret.funnelAtVelocity(funnelVel, tolerance)) {
 
         indexer.rotateToVelocity(indexerVel);
-        rotateFunnelToVelocity(funnelVel);
+        turret.rotateFunnelToVelocity(funnelVel);
     }
 }
 

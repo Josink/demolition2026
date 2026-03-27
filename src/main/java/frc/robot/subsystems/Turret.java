@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.BooleanSupplier;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -41,6 +42,8 @@ public class Turret extends SubsystemBase {
   private final MotionMagicVelocityTorqueCurrentFOC shooterVelocityRequest = new MotionMagicVelocityTorqueCurrentFOC(0);
 
   final DutyCycleOut rotate = new DutyCycleOut(0);
+
+  private final VoltageOut m_sysIdControl = new VoltageOut(0);
 
   private final SysIdRoutine s_sysIdRoutine =
       new SysIdRoutine(

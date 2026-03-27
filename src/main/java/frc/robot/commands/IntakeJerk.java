@@ -2,44 +2,47 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Auton;
+package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class MoveIntake extends Command {
-  /** Creates a new IntakeFuel. */
+public class IntakeJerk extends Command {
   private final Intake intake;
-  private boolean down;
+  private final Timer timer = new Timer();
 
-  private double intakeRotateVelocity;
+  private static final double PERIOD = 0.2; // time between flips
+  private static final double SPEED = 0.5;
 
-  public MoveIntake(Intake intake, Boolean down, double intakeRotateVelocity) {
+  public IntakeJerk(Intake intake) {
     this.intake = intake;
-    this.down = down;
-    this.intakeRotateVelocity = intakeRotateVelocity;
-
     addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer.reset();
+    timer.start();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(down){
-      intake.down(intakeRotateVelocity);
-    } else{
-      intake.up(-intakeRotateVelocity);
+    if ((int)(timer.get() / PERIOD) % 2 == 0) {
+      intake.up(SPEED);
+    } else {
+      intake.down(-SPEED);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    intake.off();
+    timer.stop();
+  }
 
   // Returns true when the command should end.
   @Override

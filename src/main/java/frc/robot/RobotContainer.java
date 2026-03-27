@@ -6,20 +6,18 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.Set;
-
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoPlay;
+import frc.robot.commands.IntakeJerk;
 import frc.robot.commands.ManualPlay;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.Auton.Shoot;
@@ -56,8 +54,8 @@ public class RobotContainer {
 
     public RobotContainer() {
         NamedCommands.registerCommand("Shoot", new Shoot(indexer, turret, intake, 5, 70, 40, -0.7));
-        NamedCommands.registerCommand("Intake Down", new MoveIntake(intake, true));
-        NamedCommands.registerCommand("Intake Up", new MoveIntake(intake, false));
+        NamedCommands.registerCommand("Intake Down", new MoveIntake(intake, true, 0.7));
+        NamedCommands.registerCommand("Intake Up", new MoveIntake(intake, false, 0.7));
         NamedCommands.registerCommand("Intake", new IntakeFuel(intake, indexer, 0.7, 40));
         NamedCommands.registerCommand("Rotate Turret From Left", new RotateTurret(turret, -0.125));
         NamedCommands.registerCommand("Rotate Turret From Right", new RotateTurret(turret, 0.125));
@@ -66,14 +64,12 @@ public class RobotContainer {
              indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
             OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
-            65, 55, 70, 30, 0.7, -0.5, 2
-        );
+            65, 55, 70, 30, 0.7, 2, 0.7);
 
         autoPlay = new AutoPlay(
             indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(), 
-            2, 100, 0.7, 40, -0.7
-        );
+            2, 100, 0.7, 40, 0.7);
 
         autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -107,6 +103,7 @@ public class RobotContainer {
         //OPERATPOR JOYSTICK BINDINGS
         turret.setDefaultCommand(manualPlay);
         OperatorJoystick.button(7).toggleOnTrue(autoPlay);
+        OperatorJoystick.button(9).whileTrue(new IntakeJerk(intake));
 
         //SysId routines for shooter
         // OperatorJoystick.a().whileTrue(turret.sysIdQuasistaticForward());

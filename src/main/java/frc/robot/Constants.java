@@ -60,6 +60,7 @@ public class Constants {
 
     public static final class intakeConstants {
         public static final int intakeMotorID = 60;
+        public static int intakeRotateMotorID = 61;
 
         //slot 0 PID values
         public static final double kP = 10;
@@ -76,6 +77,10 @@ public class Constants {
 
         //velocity setpoint
         public static final int intakeSpeedSetPoint = 30;
+        
+        public static final double intakeRotateMotorSensorToMechanismRatio = 25;
+        public static final double ReverseSoftLimitThreshold = 0;
+        public static final double ForwardSoftLimitThreshold = 0;
     }
 
     public static final class indexerConstants {

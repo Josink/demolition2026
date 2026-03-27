@@ -36,7 +36,7 @@ public class Constants {
         public static final double SkP = 0.20399;
         public static final double SkI = 0;
         public static final double SkD = 0;
-        public static final double Skv = 0.12018;
+        public static final double Skv = 0.15018;
         public static final double Sks = 0.22694;
         public static final double Ska = 0.0052615;
 
@@ -79,7 +79,7 @@ public class Constants {
         public static final int intakeSpeedSetPoint = 30;
         
         public static final double intakeRotateMotorSensorToMechanismRatio = 25;
-        public static final double ReverseSoftLimitThreshold = 0;
+        public static final double ReverseSoftLimitThreshold = -0.36;
         public static final double ForwardSoftLimitThreshold = 0;
     }
 

@@ -5,9 +5,12 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -67,22 +70,29 @@ public class AutoPlay extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double maxShooterVelocity = 90;
     double minShooterVelocity = 55; 
 
-    shooterVelocity = (2 * minShooterVelocity + maxShooterVelocity);
-    funnelVelocity = shooterVelocity * 0.8;
+    Distance dist = vision.getDistanceToHub();
+    if (dist != null) {
+        shooterVelocity = 25 * dist.in(Meters) - 193;
+        funnelVelocity = shooterVelocity * 0.8;
+        SmartDashboard.putNumber("DistanceToHub (m)", dist.in(Meters));
+
+    } else {
+        shooterVelocity = minShooterVelocity;
+        funnelVelocity = shooterVelocity * 0.8;
+    }
 
     vision.getAngleToHub(shooterVelocity).ifPresent(angle -> {
-        double turretAngle = angle.in(Degrees);
-        turret.setTurretAngleDegrees(-turretAngle); 
+        turret.setTurretAngleDegrees(angle.in(Degrees)); 
+        SmartDashboard.putNumber("AngleTOHub", angle.in(Degrees));
     });
 
     if(rightTrigger.getAsBoolean()) {
       runShooterSequence(shooterVelocity, funnelVelocity, lowIndexerVelocity,
-      indexerVelocity, intakeVelocity, tolerance, indexer, intake);
+      indexerVelocity, tolerance, indexer, intake);
     } else if(leftTrigger.getAsBoolean()){
-      intake.rotateToVelocity(intakeVelocity);
+      intake.rotateToVelocity(-intakeVelocity);
     } else {
       turret.stopShooter(0);
       turret.stopFunnel(0);
@@ -104,18 +114,14 @@ public class AutoPlay extends Command {
     double funnelVel,
     double lowIndexerVel,
     double indexerVel,
-    double intakeVel,
     double tolerance,
     Indexer indexer,
     Intake intake
 ) {
     turret.rotateToVelocity(shooterVel);
     indexer.rotateToVelocity(lowIndexerVel);
-    intake.rotateToVelocity(intakeVel);
 
-    if (turret.shooterAtVelocity(shooterVel, tolerance) &&
-        turret.funnelAtVelocity(funnelVel, tolerance)) {
-
+    if (turret.shooterAtVelocity(shooterVel, tolerance)) {
         indexer.rotateToVelocity(indexerVel);
         turret.rotateFunnelToVelocity(funnelVel);
     }

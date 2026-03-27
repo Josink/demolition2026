@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degree;
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Optional;
@@ -127,8 +126,8 @@ public class Vision extends SubsystemBase {
     if (est == null) return null;
 
     double distanceToHub = est.pose.getTranslation().getDistance(hubAprilTag.getTranslation());
-    return Inches.of(distanceToHub);
-  }
+    return Meters.of(distanceToHub);  
+}
 
   public Optional<Angle> getAngleToHub(double shotSpeed) {
     PoseEstimate est = getBestPoseEstimate();
@@ -148,9 +147,17 @@ public class Vision extends SubsystemBase {
     double dx = hubAprilTag.getX() - futureX;
     double dy = hubAprilTag.getY() - futureY;
 
-    double angle = Math.toDegrees(Math.atan2(dy, dx));
+    double fieldAngle = Math.toDegrees(Math.atan2(dy, dx));
 
-    return Optional.of(Degree.of(angle));
+    double turretAngle = fieldAngle - robotPose.getRotation().getDegrees();
+    turretAngle = Math.IEEEremainder(turretAngle, 360.0);
+
+    double maxTurretAngle = 90.0;
+    double minTurretAngle = -180.0;
+    if (turretAngle > maxTurretAngle) turretAngle = maxTurretAngle;
+    if (turretAngle < minTurretAngle) turretAngle = minTurretAngle;
+    
+    return Optional.of(Degree.of(turretAngle));
   }
 
   public double getShotTimeSeconds(double shotSpeed) {

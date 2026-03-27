@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -34,6 +35,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Intake Position", intakeRotateMotor.getPosition().getValueAsDouble());
   }
 
   public void suck(double speed){
@@ -97,9 +99,9 @@ public class Intake extends SubsystemBase {
     TalonFXConfiguration talonconfigs = new TalonFXConfiguration();
 
     SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonconfigs.SoftwareLimitSwitch;
-    softwareLimitSwitchConfigs.ForwardSoftLimitEnable = false;
+    softwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
     softwareLimitSwitchConfigs.ForwardSoftLimitThreshold = Constants.intakeConstants.ForwardSoftLimitThreshold;
-    softwareLimitSwitchConfigs.ReverseSoftLimitEnable = false;
+    softwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
     softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = Constants.intakeConstants.ReverseSoftLimitThreshold;
 
     talonconfigs.Feedback.FeedbackRemoteSensorID = intakeRotateMotor.getDeviceID();
@@ -109,7 +111,7 @@ public class Intake extends SubsystemBase {
     intakeRotateMotor.getConfigurator().apply(talonconfigs);
 
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     intakeMotor.getConfigurator().apply(motorOutputConfigs);

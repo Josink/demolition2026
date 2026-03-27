@@ -136,6 +136,8 @@ public class Turret extends SubsystemBase {
   }
 
   public void setTurretAngleDegrees(double degrees) {
+    degrees = Math.min(90.0, Math.max(-180.0, degrees));
+
     Rotation2d target = Rotation2d.fromDegrees(degrees);
     double rotations = target.getRotations();
     rotateToPos(rotations);

@@ -72,7 +72,7 @@ public class Indexer extends SubsystemBase {
     indexerMotor.getConfigurator().apply(talonconfigs);
 
     MotorOutputConfigs motorOutputConfigs = talonconfigs.MotorOutput;
-    motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     indexerMotor.getConfigurator().apply(motorOutputConfigs);

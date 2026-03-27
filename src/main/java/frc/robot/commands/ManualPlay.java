@@ -104,9 +104,9 @@ public class ManualPlay extends Command {
 
     if (rightTrigger.getAsBoolean()) {
       runShooterSequence(shootVelocity, funnelVelocity, lowIndexerVelocity,
-      indexerVelocity, intakeVelocity, tolerance, indexer, intake);
+      indexerVelocity, tolerance, indexer, intake);
     } else if(leftTrigger.getAsBoolean()){
-      intake.rotateToVelocity(intakeVelocity);
+      intake.rotateToVelocity(-intakeVelocity);
     }else{
       turret.stopShooter(0);
       turret.stopFunnel(0);
@@ -128,22 +128,37 @@ public class ManualPlay extends Command {
     double funnelVel,
     double lowIndexerVel,
     double indexerVel,
+    double tolerance,
+    Indexer indexer,
+    Intake intake
+  ) {
+    turret.rotateToVelocity(shooterVel);
+    indexer.rotateToVelocity(lowIndexerVel);
+
+    if (turret.shooterAtVelocity(shooterVel, tolerance)) {
+        indexer.rotateToVelocity(indexerVel);
+        turret.rotateFunnelToVelocity(funnelVel);
+    }
+  }
+
+  public void runNegShooterSequence(
+    double shooterVel,
+    double funnelVel,
+    double lowIndexerVel,
+    double indexerVel,
     double intakeVel,
     double tolerance,
     Indexer indexer,
     Intake intake
-) {
-    turret.rotateToVelocity(shooterVel);
-    indexer.rotateToVelocity(lowIndexerVel);
+  ) {
+    turret.rotateToVelocity(-shooterVel);
+    indexer.rotateToVelocity(-lowIndexerVel);
     intake.rotateToVelocity(intakeVel);
 
-    if (turret.shooterAtVelocity(shooterVel, tolerance) &&
-        turret.funnelAtVelocity(funnelVel, tolerance)) {
-
-        indexer.rotateToVelocity(indexerVel);
-        turret.rotateFunnelToVelocity(funnelVel);
-    }
-}
+    indexer.rotateToVelocity(-indexerVel);
+    turret.rotateFunnelToVelocity(-funnelVel);
+    
+  }
 
   @Override
   public void end(boolean interrupted) {

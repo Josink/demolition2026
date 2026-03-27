@@ -61,15 +61,18 @@ public class RobotContainer {
         NamedCommands.registerCommand("Rotate Turret From Right", new RotateTurret(turret, 0.125));
 
         manualPlay = new ManualPlay(
-             indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
+            indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
             OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
-            65, 55, 70, 30, 0.7, 2, 0.7);
+            47, 80, 100, 
+            30, 0.4, 2, 
+            0.1);
 
         autoPlay = new AutoPlay(
             indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(), 
-            2, 100, 0.7, 40, 0.7);
+            2, 100, 0.4, 
+            40, 0.1);
 
         autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -102,7 +105,21 @@ public class RobotContainer {
 
         //OPERATPOR JOYSTICK BINDINGS
         turret.setDefaultCommand(manualPlay);
-        OperatorJoystick.button(7).toggleOnTrue(autoPlay);
+
+        OperatorJoystick.button(7).onTrue(
+            new edu.wpi.first.wpilibj2.command.InstantCommand(() -> {
+                // Flip the boolean
+                isAutoMode = !isAutoMode;
+                SmartDashboard.putBoolean("Auto Mode Enabled", isAutoMode);
+
+                // Schedule or cancel autoPlay based on the new state
+                if (isAutoMode) {
+                    autoPlay.schedule();
+                } else {
+                    autoPlay.cancel();
+                }
+            })
+        );
         OperatorJoystick.button(9).whileTrue(new IntakeJerk(intake));
 
         //SysId routines for shooter

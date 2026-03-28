@@ -74,13 +74,13 @@ public class AutoPlay extends Command {
 
     Distance dist = vision.getDistanceToHub();
     if (dist != null) {
-        shooterVelocity = 25 * dist.in(Meters) - 193;
+        shooterVelocity = 4.85 * dist.in(Meters) + 35.5;
         funnelVelocity = shooterVelocity * 0.8;
         SmartDashboard.putNumber("DistanceToHub (m)", dist.in(Meters));
 
     } else {
         shooterVelocity = minShooterVelocity;
-        funnelVelocity = shooterVelocity * 0.8;
+        funnelVelocity = shooterVelocity;
     }
 
     vision.getAngleToHub(shooterVelocity).ifPresent(angle -> {
@@ -103,7 +103,7 @@ public class AutoPlay extends Command {
     if(leftBumper.getAsBoolean()){
       intake.down(intakeRotateVelocity);
     } else if(rightBumper.getAsBoolean()){
-      intake.up(-intakeRotateVelocity);
+      intake.up(-intakeRotateVelocity* 2.5);
     } else{
       intake.off();
     }

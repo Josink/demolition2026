@@ -117,7 +117,7 @@ public class ManualPlay extends Command {
     if(leftBumper.getAsBoolean()){
       intake.down(intakeRotateVelocity);
     } else if (rightBumper.getAsBoolean()){
-      intake.up(-intakeRotateVelocity);
+      intake.up(-intakeRotateVelocity * 2.5);
     } else{
       intake.off();
     }

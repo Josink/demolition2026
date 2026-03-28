@@ -33,7 +33,7 @@ public class Constants {
         public static final int MotionMagicJerk = 1000;
 
         //slot 0 PID values SHOOTER MOTORS
-        public static final double SkP = 0.22399;
+        public static final double SkP = 0.20399;
         public static final double SkI = 0;
         public static final double SkD = 0;
         public static final double Skv = 0.15018;
@@ -44,7 +44,7 @@ public class Constants {
         public static final double FkP = 0.32867;
         public static final double FkI = 0.15;
         public static final double FkD = 0.08;
-        public static final double Fkv = 0.22169;
+        public static final double Fkv = 0.25169;
         public static final double Fks = 0.1826;
         public static final double Fka = 0.006896;
 

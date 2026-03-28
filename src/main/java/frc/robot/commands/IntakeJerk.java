@@ -13,7 +13,7 @@ public class IntakeJerk extends Command {
   private final Timer timer = new Timer();
 
   private static final double PERIOD = 0.2; // time between flips
-  private static final double SPEED = 0.5;
+  private static final double SPEED = 0.1;
 
   public IntakeJerk(Intake intake) {
     this.intake = intake;
@@ -31,9 +31,9 @@ public class IntakeJerk extends Command {
   @Override
   public void execute() {
     if ((int)(timer.get() / PERIOD) % 2 == 0) {
-      intake.up(SPEED);
+      intake.up(-SPEED * 2.5);
     } else {
-      intake.down(-SPEED);
+      intake.down(SPEED);
     }
   }
 

@@ -64,7 +64,7 @@ public class RobotContainer {
             indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
             OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(),
             OperatorJoystick.x(), OperatorJoystick.y(), OperatorJoystick.a(), OperatorJoystick.b(), OperatorJoystick::getLeftX,
-            47, 80, 100, 
+            40, 80, 100, 
             30, 0.4, 2, 
             0.1);
 

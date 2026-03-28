@@ -12,10 +12,12 @@ public class RotateTurret extends Command {
   /** Creates a new RotateTurret. */
   private final Turret turret;
   private final double pos;
+  private final double tolerance;
 
-  public RotateTurret(Turret turret, double pos) {
+  public RotateTurret(Turret turret, double pos, double tolerance) {
     this.turret = turret;
     this.pos = pos;
+    this.tolerance = tolerance;
 
     addRequirements(turret);
   }
@@ -37,6 +39,6 @@ public class RotateTurret extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return turret.turretAtPosition(pos, tolerance);
   }
 }

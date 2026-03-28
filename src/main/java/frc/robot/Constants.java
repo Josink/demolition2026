@@ -33,7 +33,7 @@ public class Constants {
         public static final int MotionMagicJerk = 1000;
 
         //slot 0 PID values SHOOTER MOTORS
-        public static final double SkP = 0.20399;
+        public static final double SkP = 0.22399;
         public static final double SkI = 0;
         public static final double SkD = 0;
         public static final double Skv = 0.15018;
@@ -79,7 +79,7 @@ public class Constants {
         public static final int intakeSpeedSetPoint = 30;
         
         public static final double intakeRotateMotorSensorToMechanismRatio = 25;
-        public static final double ReverseSoftLimitThreshold = -0.36;
+        public static final double ReverseSoftLimitThreshold = -0.247;
         public static final double ForwardSoftLimitThreshold = 0;
     }
 

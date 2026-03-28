@@ -54,11 +54,11 @@ public class RobotContainer {
 
     public RobotContainer() {
         NamedCommands.registerCommand("Shoot", new Shoot(indexer, turret, intake, 5, 70, 40, -0.7));
-        NamedCommands.registerCommand("Intake Down", new MoveIntake(intake, true, 0.7));
-        NamedCommands.registerCommand("Intake Up", new MoveIntake(intake, false, 0.7));
+        NamedCommands.registerCommand("Intake Down", new MoveIntake(intake, true, 0.1));
+        NamedCommands.registerCommand("Intake Up", new MoveIntake(intake, false, 0.1));
         NamedCommands.registerCommand("Intake", new IntakeFuel(intake, indexer, 0.7, 40));
-        NamedCommands.registerCommand("Rotate Turret From Left", new RotateTurret(turret, -0.125));
-        NamedCommands.registerCommand("Rotate Turret From Right", new RotateTurret(turret, 0.125));
+        NamedCommands.registerCommand("Rotate Turret From Left", new RotateTurret(turret, -0.125, 0.005));
+        NamedCommands.registerCommand("Rotate Turret From Right", new RotateTurret(turret, 0.125, 0.005));
 
         manualPlay = new ManualPlay(
             indexer, turret, intake, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 

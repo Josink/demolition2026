@@ -43,7 +43,7 @@ public class RobotContainer {
     public final Intake intake = new Intake();
     public final Indexer indexer = new Indexer();
 
-    public final Vision vision = new Vision(drivetrain);
+    //public final Vision vision = new Vision(drivetrain);
 
     private boolean isAutoMode = false;
     private Command manualPlay;
@@ -68,11 +68,11 @@ public class RobotContainer {
             30, 0.4, 2, 
             0.1);
 
-        autoPlay = new AutoPlay(
-            indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
-            OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(), 
-            2, 100, 0.4, 
-            40, 0.1);
+        // autoPlay = new AutoPlay(
+        //     indexer, turret, intake, vision, OperatorJoystick.leftTrigger(), OperatorJoystick.rightTrigger(), 
+        //     OperatorJoystick.leftBumper(), OperatorJoystick.rightBumper(), 
+        //     2, 100, 0.4, 
+        //     40, 0.1);
 
         autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -109,7 +109,7 @@ public class RobotContainer {
         OperatorJoystick.button(7).onTrue(
             new edu.wpi.first.wpilibj2.command.InstantCommand(() -> {
                 // Flip the boolean
-                isAutoMode = !isAutoMode;
+                //isAutoMode = !isAutoMode;
                 SmartDashboard.putBoolean("Auto Mode Enabled", isAutoMode);
 
                 // Schedule or cancel autoPlay based on the new state

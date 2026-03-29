@@ -30,7 +30,7 @@ public class Vision extends SubsystemBase {
   private static final String LL_LEFT  = "limelight-left";   
   private static final String LL_RIGHT = "limelight-right";
 
-  int[] validIDs = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
+  int[] validIDs = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
 
   private Pose2d hubAprilTag;
   private PoseEstimate estimate;
@@ -66,12 +66,12 @@ public class Vision extends SubsystemBase {
     }
 
     // Only update robot orientation if heading changed significantly
-    double currentHeading = drivetrain.getPose().getRotation().getDegrees();
-    if (Math.abs(currentHeading - lastHeading) > 0.1) {
-      LimelightHelpers.SetRobotOrientation(LL_LEFT, currentHeading, 0, 0, 0, 0, 0);
-      LimelightHelpers.SetRobotOrientation(LL_RIGHT, currentHeading, 0, 0, 0, 0, 0);
-      lastHeading = currentHeading;
-    }
+    // double currentHeading = drivetrain.getPose().getRotation().getDegrees();
+    // if (Math.abs(currentHeading - lastHeading) > 0.1) {
+    //   LimelightHelpers.SetRobotOrientation(LL_LEFT, currentHeading, 0, 0, 0, 0, 0);
+    //   LimelightHelpers.SetRobotOrientation(LL_RIGHT, currentHeading, 0, 0, 0, 0, 0);
+    //   lastHeading = currentHeading;
+    // }
 
     // Get the best pose estimate (from left or right Limelight)
     estimate = getBestPoseEstimate();

@@ -8,6 +8,9 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,9 +54,11 @@ public class SwerveDrive extends Command {
         m_speedChooser.addOption("20%", 0.2);
         SmartDashboard.putData("Speed Percent", m_speedChooser);
 
-        driverController.rightBumper().onTrue(
-            swerve.runOnce(() -> swerve.seedFieldCentric())
-        );
+        driverController.rightBumper().onTrue(swerve.runOnce(() -> {
+            var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+            Rotation2d angle = (alliance == Alliance.Red) ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0);
+            swerve.seedFieldCentric(angle);
+        }));
         driverController.leftBumper().onTrue(swerve.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
 
     }
